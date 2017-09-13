@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "string_extensions.hpp"
 #include <codecvt>
 

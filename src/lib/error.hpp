@@ -1,12 +1,13 @@
 #pragma once
+#include "debug.hpp"
+#include <string>
 #include <Windows.h>
-#include "heap_ptr.hpp"
 
-#define CHECK_BOOL(br) checkBool((br), __WFILE__, __LINE__)
-#define CHECK_COUNT(cnt) checkCount((cnt), __WFILE__, __LINE__)
-#define CHECK_HR(dwr) checkHr((dwr), __WFILE__, __LINE__)
-#define CHECK_WIN32(dwr) checkWin32((dwr), __WFILE__, __LINE__)
-#define CHECK(r1, r2) check((r1), (r2), __WFILE__, __LINE__)
+#define CHECK_BOOL(br) win32cpp::checkBool((br), __WFILE__, __LINE__)
+#define CHECK_COUNT(cnt) win32cpp::checkCount((cnt), __WFILE__, __LINE__)
+#define CHECK_HR(dwr) win32cpp::checkHr((dwr), __WFILE__, __LINE__)
+#define CHECK_WIN32(dwr) win32cpp::checkWin32((dwr), __WFILE__, __LINE__)
+#define CHECK(r1, r2) win32cpp::check((r1), (r2), __WFILE__, __LINE__)
 
 #define LANGID_ENGLISH 1033
 
@@ -29,12 +30,12 @@ namespace win32cpp
 		}
 	}
 
-	inline void checkBool(BOOL br, const std::wstring& file, int line)
+	inline void checkBool(BOOL br, const wchar_t* file, int line)
 	{
 		if (FALSE == br)
 		{
 			auto gle = GetLastError();
-			outputDebugStringEx(L"%s(%d): BOOL result failure (%d)\n", file.c_str(), line, gle);
+			outputDebugStringEx(L"%s(%d): BOOL result failure (%d)\n", file, line, gle);
 			throw check_failed(gle);
 		}
 	}
@@ -47,12 +48,12 @@ namespace win32cpp
 		}
 	}
 
-	inline void checkBool(bool br, const std::wstring& file, int line)
+	inline void checkBool(bool br, const wchar_t* file, int line)
 	{
 		if (false == br)
 		{
 			auto gle = GetLastError();
-			outputDebugStringEx(L"%s(%d): bool result failure (%d)\n", file.c_str(), line, gle);
+			outputDebugStringEx(L"%s(%d): bool result failure (%d)\n", file, line, gle);
 			throw check_failed(gle);
 		}
 	}
@@ -65,12 +66,12 @@ namespace win32cpp
 		}
 	}
 
-	inline void checkCount(int c, const std::wstring& file, int line)
+	inline void checkCount(int c, const wchar_t* file, int line)
 	{
 		if (0 == c)
 		{
 			auto gle = GetLastError();
-			outputDebugStringEx(L"%s(%d): count result failure (%d)\n", file.c_str(), line, gle);
+			outputDebugStringEx(L"%s(%d): count result failure (%d)\n", file, line, gle);
 			throw check_failed(gle);
 		}
 	}
@@ -83,11 +84,11 @@ namespace win32cpp
 		}
 	}
 
-	inline void checkHr(HRESULT hr, const std::wstring& file, int line)
+	inline void checkHr(HRESULT hr, const wchar_t* file, int line)
 	{
 		if (S_OK != hr)
 		{
-			outputDebugStringEx(L"%s(%d): HRESULT result failure (0x%08x)\n", file.c_str(), line, hr);
+			outputDebugStringEx(L"%s(%d): HRESULT result failure (0x%08x)\n", file, line, hr);
 			throw check_failed(hr);
 		}
 	}
@@ -100,30 +101,30 @@ namespace win32cpp
 		}
 	}
 
-	inline void checkWin32(DWORD dwr, const std::wstring& file, int line)
+	inline void checkWin32(DWORD dwr, const wchar_t* file, int line)
 	{
 		if (ERROR_SUCCESS != dwr)
 		{
-			outputDebugStringEx(L"%s(%d): WIN32 result failure (0x%08x)\n", file.c_str(), line, dwr);
+			outputDebugStringEx(L"%s(%d): WIN32 result failure (0x%08x)\n", file, line, dwr);
 			throw check_failed(dwr);
 		}
 	}
 
 	template <typename T>
-	void check(T EXPECT_TRUEed, T actual)
+	void check(T expected, T actual)
 	{
-		if (EXPECT_TRUEed != actual)
+		if (expected != actual)
 		{
 			throw check_failed(0);
 		}
 	}
 
 	template <typename T>
-	void check(T EXPECT_TRUEed, T actual, const std::wstring& file, int line)
+	void check(T expected, T actual, const wchar_t* file, int line)
 	{
-		if (EXPECT_TRUEed != actual)
+		if (expected != actual)
 		{
-			outputDebugStringEx(L"%s(%d): check failure\n", file.c_str(), line);
+			outputDebugStringEx(L"%s(%d): check failure\n", file, line);
 			throw check_failed(0);
 		}
 	}
