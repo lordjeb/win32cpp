@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace vxshared
+namespace win32cpp
 {
 	tracer::tracer(wchar_t const* filename, unsigned const line) : m_filename{ filename }, m_line{ line }
 	{
@@ -26,7 +26,7 @@ namespace vxshared
 		va_end(args);
 	}
 
-	auto vxshared::outputDebugStringEx(wchar_t const* pFormat, ...) -> void
+	auto win32cpp::outputDebugStringEx(wchar_t const* pFormat, ...) -> void
 	{
 		va_list args;
 		va_start(args, pFormat);

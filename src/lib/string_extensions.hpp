@@ -2,7 +2,7 @@
 #include <algorithm>
 
 
-namespace vxshared
+namespace win32cpp
 {
 	template<typename... Args>
 	std::wstring appendPath(Args const&... args)

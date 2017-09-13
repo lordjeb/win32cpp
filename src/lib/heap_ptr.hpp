@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-namespace vxshared
+namespace win32cpp
 {
 	struct heap_ptr_deleter
 	{

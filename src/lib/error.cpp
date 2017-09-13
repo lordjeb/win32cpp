@@ -3,7 +3,7 @@
 
 using namespace std;
 
-wstring vxshared::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_ENGLISH*/)
+wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_ENGLISH*/)
 {
 	void* pString;
 	auto flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM;

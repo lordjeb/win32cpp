@@ -39,7 +39,7 @@
 //	RELTRACE( format-string, parameters... );				-- As TRACE but includes release and debug builds
 //
 
-namespace vxshared
+namespace win32cpp
 {
 	struct tracer
 	{
@@ -54,9 +54,9 @@ namespace vxshared
 }
 
 #ifdef _DEBUG
-#define TRACE vxshared::tracer( __WFILE__, __LINE__ )
+#define TRACE win32cpp::tracer( __WFILE__, __LINE__ )
 #else
 #define TRACE __noop
 #endif
 
-#define RELTRACE vxshared::tracer( __WFILE__, __LINE__ )
+#define RELTRACE win32cpp::tracer( __WFILE__, __LINE__ )

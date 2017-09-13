@@ -2,9 +2,9 @@
 #include "windows_api.hpp"
 
 using namespace std;
-using namespace vxshared;
+using namespace win32cpp;
 
-namespace vxshared
+namespace win32cpp
 {
 	shared_ptr<Iwindows_api> g_windows_api{ new windows_api() };
 
@@ -67,12 +67,12 @@ namespace vxshared
 		return ::WinHttpCloseHandle(hInternet);
 	}
 
-	shared_ptr<Iwindows_api> vxshared::getGlobalWindowsApi()
+	shared_ptr<Iwindows_api> win32cpp::getGlobalWindowsApi()
 	{
 		return g_windows_api;
 	}
 
-	void vxshared::setGlobalWindowsApi(const shared_ptr<Iwindows_api> p)
+	void win32cpp::setGlobalWindowsApi(const shared_ptr<Iwindows_api> p)
 	{
 		if (p)
 		{

@@ -8,7 +8,7 @@
 //	CreateEvent( NoSecurityAttributes, ManualReset, Unsignalled, Unnammed ).
 //
 
-namespace vxshared
+namespace win32cpp
 {
 	static const HANDLE NoTemplateFile = nullptr;
 

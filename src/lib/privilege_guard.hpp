@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "module_info.hpp"
 
-namespace vxshared
+namespace win32cpp
 {
 	class privilege_guard
 	{

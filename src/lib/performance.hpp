@@ -2,7 +2,7 @@
 #include <functional>
 
 
-namespace vxshared
+namespace win32cpp
 {
 
 	//	Measures the time in milliseconds that a function (or lambda) takes to complete.

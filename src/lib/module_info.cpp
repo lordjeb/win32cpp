@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace vxshared
+namespace win32cpp
 {
 	module_info::module_info()
 	{

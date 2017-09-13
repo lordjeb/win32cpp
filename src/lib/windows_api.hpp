@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-namespace vxshared
+namespace win32cpp
 {
 	class Iwindows_api
 	{

@@ -4,9 +4,9 @@
 #include "windows_api.hpp"
 
 using namespace std;
-using namespace vxshared;
+using namespace win32cpp;
 
-namespace vxshared
+namespace win32cpp
 {
 	//
 	//	Handle traits. Used to specialize basic_unique_handle and basic_shared_handle for different types of handles.

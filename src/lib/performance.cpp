@@ -4,7 +4,7 @@
 
 using namespace std;
 
-auto vxshared::measureElapsedTime( function<void()> fn ) -> double
+auto win32cpp::measureElapsedTime( function<void()> fn ) -> double
 {
 	LARGE_INTEGER countsPerS = { 0 };
 	LARGE_INTEGER beginElapsedCounts = { 0 };

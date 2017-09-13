@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace vxshared
+namespace win32cpp
 {
 	privilege_guard::privilege_guard(const shared_ptr<Imodule_info>& moduleInfo, const wstring& privilege)
 		: m_moduleInfo{ moduleInfo }, m_handle{ moduleInfo->getCurrentToken() }, m_privilege{ privilege }

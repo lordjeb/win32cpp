@@ -10,7 +10,7 @@
 
 #define LANGID_ENGLISH 1033
 
-namespace vxshared
+namespace win32cpp
 {
 	struct check_failed
 	{

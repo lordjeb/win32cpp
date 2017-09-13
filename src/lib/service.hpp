@@ -6,7 +6,7 @@
 #include "handle.hpp"
 
 
-namespace vxshared
+namespace win32cpp
 {
 	//	Defines the interface that a service should implement
 	class service_base

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "handle.hpp"
 
-namespace vxshared
+namespace win32cpp
 {
 	class Imodule_info
 	{
