@@ -1,5 +1,7 @@
+#include "error.hpp"
 #include "performance.hpp"
 #include <functional>
+#include <windows.h>
 
 using namespace std;
 

@@ -4,6 +4,7 @@
 #include <error.hpp>
 #include <module_info.hpp>
 #include <string_extensions.hpp>
+#include <performance.hpp>
 
 using namespace std;
 using namespace win32cpp;
@@ -47,4 +48,8 @@ void main()
     //
     wcout << module_info::getModulePath() << endl;
     wcout << module_info::getModuleFilename() << endl;
+
+    // performance.hpp
+    //
+    wcout << measureElapsedTime([](){Sleep(10);}) << endl;
 }
