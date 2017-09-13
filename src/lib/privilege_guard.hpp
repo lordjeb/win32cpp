@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "module_info.hpp"
 
 namespace win32cpp

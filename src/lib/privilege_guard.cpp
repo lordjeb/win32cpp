@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "handle.hpp"
 #include "privilege_guard.hpp"
 #include "module_info.hpp"

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <debug.hpp>
 #include <error.hpp>
+#include <module_info.hpp>
 #include <string_extensions.hpp>
 
 using namespace std;
@@ -41,4 +42,9 @@ void main()
     wcout << L"(" << trimPath(std::wstring{LR"(\directory\)"}) << L")" << endl;
 
     wcout << L"(" << appendPath(L"C:", L"directory", L"filename.txt") << L")" << endl;
+
+    // module_info.hpp
+    //
+    wcout << module_info::getModulePath() << endl;
+    wcout << module_info::getModuleFilename() << endl;
 }

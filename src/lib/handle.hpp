@@ -1,10 +1,10 @@
 #pragma once
-#include "stdafx.h"
+#include "debug.hpp"
+#include <vector>
+#include <windows.h>
 #include <winhttp.h>
-#include "windows_api.hpp"
 
-using namespace std;
-using namespace win32cpp;
+//using namespace std;
 
 namespace win32cpp
 {
@@ -23,7 +23,7 @@ namespace win32cpp
 
 		static auto close(pointer value) throw() -> void
 		{
-			VERIFY(getGlobalWindowsApi()->CloseHandle(value));
+			VERIFY(CloseHandle(value));
 		}
 	};
 
@@ -38,7 +38,7 @@ namespace win32cpp
 
 		static auto close(pointer value) throw() -> void
 		{
-			VERIFY(getGlobalWindowsApi()->CloseHandle(value));
+			VERIFY(CloseHandle(value));
 		}
 	};
 
@@ -58,7 +58,7 @@ namespace win32cpp
 			//	handles look like, so we should be okay as long as dealing with registry keys.
 			if (value < HKEY_CLASSES_ROOT)
 			{
-				VERIFY(ERROR_SUCCESS == getGlobalWindowsApi()->RegCloseKey(value));
+				VERIFY(ERROR_SUCCESS == RegCloseKey(value));
 			}
 		}
 	};
@@ -74,7 +74,7 @@ namespace win32cpp
 
 		static auto close(pointer value) throw() -> void
 		{
-			VERIFY(getGlobalWindowsApi()->CloseServiceHandle(value));
+			VERIFY(CloseServiceHandle(value));
 		}
 	};
 
@@ -89,7 +89,7 @@ namespace win32cpp
 
 		static auto close(pointer value) throw() -> void
 		{
-			VERIFY(getGlobalWindowsApi()->WinHttpCloseHandle(value));
+			VERIFY(WinHttpCloseHandle(value));
 		}
 	};
 
