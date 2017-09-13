@@ -1,5 +1,7 @@
 #pragma once
+#include <memory>
 #include <crtdbg.h>
+#include <tchar.h>
 #include <Windows.h>
 
 
@@ -41,22 +43,60 @@
 
 namespace win32cpp
 {
+	template <typename T>
 	struct tracer
 	{
-		wchar_t const* m_filename;
+		T const* m_filename;
 		unsigned m_line;
 
-		tracer(wchar_t const* filename, unsigned const line);
-		auto operator()(wchar_t const* pFormat, ...) const -> void;
+		tracer(T const* filename, unsigned const line)
+			: m_filename{ filename }, m_line{ line }
+		{
+		}
+			
+		auto operator()(T const* pFormat, ...) const -> void
+		{
+			va_list args;
+			va_start(args, pFormat);
+			auto cch1 = _sctprintf(_T("%s(%d): "), m_filename, m_line);
+			ASSERT(-1 != cch1);
+			auto cch2 = _vsctprintf(pFormat, args);
+			ASSERT(-1 != cch2);
+			auto cch = cch1 + cch2 + 1;
+			auto pString = std::make_unique<T[]>(cch);
+			VERIFY(-1 != _stprintf_s(pString.get(), cch, _T("%s(%d): "), m_filename, m_line));
+			VERIFY(-1 != _vsntprintf_s(pString.get() + cch1, cch - cch1, _TRUNCATE, pFormat, args));
+			OutputDebugString(pString.get());
+			va_end(args);
+		}
 	};
 
-	auto outputDebugStringEx(wchar_t const* pFormat, ...) -> void;
+	template <typename T>
+	auto outputDebugStringEx(T const* pFormat, ...) -> void
+	{
+		va_list args;
+		va_start(args, pFormat);
+		auto cch = _vscwprintf(pFormat, args) + 1;
+		ASSERT(-1 != cch);
+		auto pString = std::make_unique<T[]>(cch);
+		VERIFY(-1 != _vsnwprintf_s(pString.get(), cch, _TRUNCATE, pFormat, args));
+		OutputDebugString(pString.get());
+		va_end(args);
+	}
 }
 
 #ifdef _DEBUG
-#define TRACE win32cpp::tracer( __WFILE__, __LINE__ )
+#ifndef _UNICODE
+#define TRACE win32cpp::tracer<char>( __FILE__, __LINE__ )
+#else
+#define TRACE win32cpp::tracer<wchar_t>( __WFILE__, __LINE__ )
+#endif
 #else
 #define TRACE __noop
 #endif
 
-#define RELTRACE win32cpp::tracer( __WFILE__, __LINE__ )
+#ifndef _UNICODE
+#define RELTRACE win32cpp::tracer<char>( __FILE__, __LINE__ )
+#else
+#define RELTRACE win32cpp::tracer<wchar_t>( __WFILE__, __LINE__ )
+#endif
