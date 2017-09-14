@@ -1,4 +1,5 @@
 #include "debug.hpp"
+#include <iostream>
 #include <memory>
 #include <Windows.h>
 
@@ -20,6 +21,7 @@ auto win32cpp::tracer::operator()(wchar_t const* pFormat, ...) const -> void
     VERIFY(-1 != swprintf_s(pString.get(), cch, L"%s(%d): ", m_filename, m_line));
     VERIFY(-1 != _vsnwprintf_s(pString.get() + cch1, cch - cch1, _TRUNCATE, pFormat, args));
     OutputDebugStringW(pString.get());
+    std::wcout << pString.get();
     va_end(args);
 }
 
