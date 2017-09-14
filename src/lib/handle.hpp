@@ -1,5 +1,6 @@
 #pragma once
 #include "debug.hpp"
+#include "error.hpp"
 #include <vector>
 #include <windows.h>
 #include <winhttp.h>
@@ -100,6 +101,7 @@ namespace win32cpp
 	template <typename Traits>
 	class basic_unique_handle
 	{
+	protected:
 		typedef typename Traits::pointer pointer;
 
 	public:
@@ -243,4 +245,44 @@ namespace win32cpp
 	typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
 	typedef basic_unique_handle<service_handle_traits> unique_service_handle;
 	typedef basic_unique_handle<http_handle_traits> unique_http_handle;
+
+	class unique_token_handle : public basic_unique_handle<null_handle_traits>
+	{
+		bool m_impersonating;
+
+	public:
+		explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) throw()
+			: basic_unique_handle<null_handle_traits>(value)
+		{
+		}
+
+		virtual ~unique_token_handle() throw()
+		{
+			if (m_impersonating)
+			{
+				CHECK_BOOL(RevertToSelf());
+			}
+		}
+
+		//	Copy (deleted)
+		unique_token_handle(const unique_token_handle&) = delete;
+		unique_token_handle& operator=(const unique_token_handle&) = delete;
+
+		//	Move
+		unique_token_handle(unique_token_handle&& o) throw()
+			: m_impersonating{ o.m_impersonating }
+		{
+		}
+
+		auto operator=(unique_token_handle&& o) throw() -> basic_unique_handle&
+		{
+			if (this != &o)
+			{
+				m_impersonating = o.m_impersonating;
+
+				o.m_impersonating = false;
+			}
+			return *this;
+		}
+	};
 }

@@ -3,7 +3,8 @@
 
 namespace win32cpp
 {
-	std::wstring getModuleFilename();
-	std::wstring getModulePath();
-	std::wstring getTempPath();
+	auto getModuleFilename() -> std::wstring;
+	auto getModulePath() -> std::wstring;
+	auto getTempPath() -> std::wstring;
+	auto getThreadToken() -> unique_token_handle;
 }

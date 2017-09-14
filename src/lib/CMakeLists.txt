@@ -3,6 +3,6 @@ add_library(win32cpp STATIC
 	error.cpp
 	module_info.cpp
 	performance.cpp
-	#privilege_guard.cpp
+	privilege_guard.cpp
 	string_extensions.cpp
 )

@@ -5,6 +5,7 @@
 #include <module_info.hpp>
 #include <string_extensions.hpp>
 #include <performance.hpp>
+#include <privilege_guard.hpp>
 
 using namespace std;
 using namespace win32cpp;
@@ -53,4 +54,10 @@ void main()
     // performance.hpp
     //
     wcout << measureElapsedTime([](){Sleep(10);}) << endl;
+
+    // privilege_guard.hpp
+    //
+    auto threadToken = getThreadToken();
+    auto shutdown_privilege = privilege_guard{ threadToken.get(), L"SeShutdownPrivilege" }; // Disabled by default
+    auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
 }
