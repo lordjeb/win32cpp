@@ -46,9 +46,9 @@ void main()
 
     // module_info.hpp
     //
-    wcout << module_info::getModulePath() << endl;
-    wcout << module_info::getModuleFilename() << endl;
-    wcout << module_info::getTempPath() << endl;
+    wcout << getModulePath() << endl;
+    wcout << getModuleFilename() << endl;
+    wcout << getTempPath() << endl;
     
     // performance.hpp
     //

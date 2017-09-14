@@ -32,20 +32,20 @@ namespace win32cpp
 	// 	return h;
 	// }
 
-	wstring module_info::getModuleFilename()
+	wstring getModuleFilename()
 	{
 		vector<wchar_t> moduleFilenameBuffer(MAX_PATH);
 		CHECK_COUNT(GetModuleFileNameW(nullptr, &moduleFilenameBuffer[0], MAX_PATH));
 		return &moduleFilenameBuffer[0];
 	}
 
-	wstring module_info::getModulePath()
+	wstring getModulePath()
 	{
 		auto moduleFilename = getModuleFilename();
 		return moduleFilename.substr(0, moduleFilename.rfind(L'\\'));
 	}
 
-	wstring module_info::getTempPath()
+	wstring getTempPath()
 	{
 		vector<wchar_t> tempPathBuffer(MAX_PATH);
 		CHECK_COUNT(GetTempPathW(MAX_PATH, &tempPathBuffer[0]));

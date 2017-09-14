@@ -3,13 +3,7 @@
 
 namespace win32cpp
 {
-	class module_info
-	{
-	public:
-		module_info() = delete;
-
-		static std::wstring getModuleFilename();
-		static std::wstring getModulePath();
-		static std::wstring getTempPath();
-	};
+	std::wstring getModuleFilename();
+	std::wstring getModulePath();
+	std::wstring getTempPath();
 }
