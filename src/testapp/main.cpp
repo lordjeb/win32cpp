@@ -60,4 +60,5 @@ void main()
     auto threadToken = getThreadToken();
     auto shutdown_privilege = privilege_guard{ threadToken.get(), L"SeShutdownPrivilege" }; // Disabled by default
     auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
+    wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
 }
