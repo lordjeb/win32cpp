@@ -19,25 +19,25 @@ function Invoke-CMakeGenerator(
     [String] $Platform
     )
 {
+    $Runtime = $Runtime.ToLower()
+    $Directory = 'build_' + $Platform + '_' + $Runtime
     if ($Platform -eq 'Win32')
     {
         $Generator = 'Visual Studio 14 2015'
-        $Directory = 'build32_' + $Runtime
     }
     else
     {
         $Generator = 'Visual Studio 14 2015 Win64'
-        $Directory = 'build64_' + $Runtime
     }
 
     # Configure build projects using CMake
     if (!(Test-Path $Directory))
     {
-        New-Item $Directory
+        New-Item -ItemType Directory -Path $Directory | Out-Null
     }
 
     Push-Location $Directory
-    & $cmake -G $Generator -DMSVC_RUNTIME=$Runtime ..
+    & $cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" ..
     Pop-Location
 
     & $cmake --build $Directory --config $Config
