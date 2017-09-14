@@ -48,7 +48,8 @@ void main()
     //
     wcout << module_info::getModulePath() << endl;
     wcout << module_info::getModuleFilename() << endl;
-
+    wcout << module_info::getTempPath() << endl;
+    
     // performance.hpp
     //
     wcout << measureElapsedTime([](){Sleep(10);}) << endl;

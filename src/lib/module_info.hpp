@@ -10,5 +10,6 @@ namespace win32cpp
 
 		static std::wstring getModuleFilename();
 		static std::wstring getModulePath();
+		static std::wstring getTempPath();
 	};
 }

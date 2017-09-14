@@ -44,4 +44,11 @@ namespace win32cpp
 		auto moduleFilename = getModuleFilename();
 		return moduleFilename.substr(0, moduleFilename.rfind(L'\\'));
 	}
+
+	wstring module_info::getTempPath()
+	{
+		vector<wchar_t> tempPathBuffer(MAX_PATH);
+		CHECK_COUNT(GetTempPathW(MAX_PATH, &tempPathBuffer[0]));
+		return &tempPathBuffer[0];
+	}
 }
