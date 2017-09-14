@@ -10,7 +10,7 @@
 using namespace std;
 using namespace win32cpp;
 
-void main()
+void wmain()
 {
     // debug.hpp
     //

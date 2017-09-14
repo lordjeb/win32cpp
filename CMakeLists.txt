@@ -41,4 +41,6 @@ endmacro()
 
 project(win32cpp)
 configure_msvc_runtime()
+add_definitions(-DUNICODE)
+add_definitions(-D_UNICODE)
 add_subdirectory(src)
