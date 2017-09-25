@@ -1,5 +1,7 @@
 [CmdletBinding()]
 Param(
+    [ValidateSet('Vs2015', 'Vs2017')]
+    [String] $VisualStudioVersion = 'Vs2015',
     [ValidateSet('All', 'Static', 'Dynamic')]
     [String] $Runtime = 'All',
     [ValidateSet('All', 'Debug', 'Release')]
@@ -8,9 +10,11 @@ Param(
     [String] $Platform = 'All'
     )
 
-$cmake = '\dev\utils\cmake\bin\cmake.exe'
+$cmake = 'cmake.exe'
 
 function Invoke-CMakeGenerator(
+    [ValidateSet('Vs2015', 'Vs2017')]
+    [String] $VisualStudioVersion,
     [ValidateSet('Static', 'Dynamic')]
     [String] $Runtime,
     [ValidateSet('Debug', 'Release')]
@@ -21,13 +25,18 @@ function Invoke-CMakeGenerator(
 {
     $Runtime = $Runtime.ToLower()
     $Directory = 'build_' + $Platform + '_' + $Runtime
-    if ($Platform -eq 'Win32')
+    if ($VisualStudioVersion -eq 'Vs2015')
     {
         $Generator = 'Visual Studio 14 2015'
     }
-    else
+    elseif ($VisualStudioVersion -eq 'Vs2017')
     {
-        $Generator = 'Visual Studio 14 2015 Win64'
+        $Generator = 'Visual Studio 15 2017'
+    }
+
+    if ($Platform -eq 'x64')
+    {
+        $Generator = $Generator + ' Win64'
     }
 
     # Configure build projects using CMake
@@ -37,9 +46,11 @@ function Invoke-CMakeGenerator(
     }
 
     Push-Location $Directory
+    Write-Output "$cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" .."
     & $cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" ..
     Pop-Location
 
+    Write-Output "$cmake --build $Directory --config $Config"
     & $cmake --build $Directory --config $Config
 }
 
@@ -76,7 +87,7 @@ foreach ($r in $Runtimes)
     {
         foreach ($c in $Configs)
         {
-            Invoke-CMakeGenerator -Runtime $r -Platform $p -Config $c
+            Invoke-CMakeGenerator -VisualStudioVersion $VisualStudioVersion -Runtime $r -Platform $p -Config $c
         }
     }
 }
