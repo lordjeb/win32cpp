@@ -1,11 +1,14 @@
 #include "..\targetver.h"
 #include <iostream>
+#include <Windows.h>
+#include <Sddl.h>
 #include <debug.hpp>
 #include <error.hpp>
 #include <module_info.hpp>
 #include <string_extensions.hpp>
 #include <performance.hpp>
 #include <privilege_guard.hpp>
+#include <heap_ptr.hpp>
 
 using namespace std;
 using namespace win32cpp;
@@ -61,4 +64,20 @@ void wmain()
     auto shutdown_privilege = privilege_guard{ threadToken.get(), L"SeShutdownPrivilege" }; // Disabled by default
     auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
     wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
+
+    // heap_ptr.hpp
+    //
+    wcout << L"Calling memory allocation routines" << endl;
+    auto hptr = heap_ptr{ HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };
+    auto lptr = local_ptr{ LocalAlloc(LPTR, 256) };
+
+    auto pSid = PSID{};
+    auto sidIdentifierAuthority = SID_IDENTIFIER_AUTHORITY{ SECURITY_NT_AUTHORITY };
+    CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &pSid));
+    auto sid = sid_ptr{ pSid };
+
+    auto pStringSid = LPTSTR{};
+    CHECK_BOOL(ConvertSidToStringSid(sid.get(), &pStringSid));
+    auto stringSid = local_ptr{ pStringSid };
+    wcout << L"Sid: " << (LPTSTR)stringSid.get() << endl;
 }
