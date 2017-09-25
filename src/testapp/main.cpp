@@ -9,6 +9,7 @@
 #include <performance.hpp>
 #include <privilege_guard.hpp>
 #include <pointer_deleter.hpp>
+#include <ptr_setter.hpp>
 
 using namespace std;
 using namespace win32cpp;
@@ -80,4 +81,13 @@ void wmain()
     CHECK_BOOL(ConvertSidToStringSid(sid.get(), &pStringSid));
     auto stringSid = local_ptr{ pStringSid };
     wcout << L"Sid: " << (LPTSTR)stringSid.get() << endl;
+
+    // ptr_deleter.hpp
+    //
+    auto sid2 = sid_ptr{};
+    CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &ptr_setter(sid2)));
+
+    auto stringSid2 = local_ptr{};
+    CHECK_BOOL(ConvertSidToStringSid(sid2.get(), (LPTSTR*)&ptr_setter(stringSid2)));
+    wcout << L"Sid: " << (LPTSTR)stringSid2.get() << endl;
 }
