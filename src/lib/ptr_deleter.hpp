@@ -23,6 +23,16 @@ namespace win32cpp
 
 	typedef std::unique_ptr<void, local_ptr_deleter> local_ptr;
 
+	struct global_ptr_deleter
+	{
+		void operator()(void *p) const
+		{
+			GlobalFree(p);
+		}
+	};
+
+	typedef std::unique_ptr<void, global_ptr_deleter> global_ptr;
+
 	struct sid_ptr_deleter
 	{
 		void operator()(void *p) const

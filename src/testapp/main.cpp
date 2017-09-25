@@ -71,6 +71,7 @@ void wmain()
     wcout << L"Calling memory allocation routines" << endl;
     auto hptr = heap_ptr{ HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };
     auto lptr = local_ptr{ LocalAlloc(LPTR, 256) };
+    auto gptr = global_ptr{ GlobalAlloc(GPTR, 256) };
 
     auto pSid = PSID{};
     auto sidIdentifierAuthority = SID_IDENTIFIER_AUTHORITY{ SECURITY_NT_AUTHORITY };
