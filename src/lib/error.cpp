@@ -1,5 +1,5 @@
 #include "error.hpp"
-#include "heap_ptr.hpp"
+#include "pointer_deleter.hpp"
 #include "string_extensions.hpp"
 
 using namespace std;

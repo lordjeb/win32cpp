@@ -8,7 +8,7 @@
 #include <string_extensions.hpp>
 #include <performance.hpp>
 #include <privilege_guard.hpp>
-#include <heap_ptr.hpp>
+#include <pointer_deleter.hpp>
 
 using namespace std;
 using namespace win32cpp;
