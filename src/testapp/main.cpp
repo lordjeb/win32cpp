@@ -8,7 +8,7 @@
 #include <string_extensions.hpp>
 #include <performance.hpp>
 #include <privilege_guard.hpp>
-#include <pointer_deleter.hpp>
+#include <ptr_deleter.hpp>
 #include <ptr_setter.hpp>
 
 using namespace std;
