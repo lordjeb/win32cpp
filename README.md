@@ -42,3 +42,9 @@ You might try this...
 ```c++
 appendPath(getTempPath(), L"filename.tmp");
 ```
+
+## Building win32cpp
+
+win32cpp is built with CMake. A Powershell script is included at the root of the repository that will assist in building various configurations. Prior to running the following command, make sure that cmake.exe is in the PATH, and that you are running within a Visual Studio command prompt.
+
+`build.ps1 -VisualStudioVersion [Vs2015|Vs2017] -Runtime [All|Static|Dynamic] -Config [All|Debug|Release] -Platform [All|Win32|x64]`
