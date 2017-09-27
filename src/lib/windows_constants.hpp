@@ -31,4 +31,6 @@ namespace win32cpp
 	enum { OpenAsProcess = TRUE, OpenAsThread = FALSE };
 
 	enum { Enable = true, Disable = false };
+
+	enum { InitiallyOwned = TRUE, NotInitiallyOwned = FALSE };
 }

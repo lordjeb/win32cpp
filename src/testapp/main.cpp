@@ -10,6 +10,8 @@
 #include <privilege_guard.hpp>
 #include <ptr_deleter.hpp>
 #include <ptr_setter.hpp>
+#include <windows_constants.hpp>
+#include <lock_guard.hpp>
 
 using namespace std;
 using namespace win32cpp;
@@ -91,4 +93,26 @@ void wmain()
     auto stringSid2 = local_ptr{};
     CHECK_BOOL(ConvertSidToStringSid(sid2.get(), (LPTSTR*)&ptr_setter(stringSid2)));
     wcout << L"Sid: " << (LPTSTR)stringSid2.get() << endl;
+
+	// lock_guard.hpp
+	//
+	{
+		auto mutex = unique_handle{ CreateMutex(NoSecurityAttributes, NotInitiallyOwned, L"MutexName") };
+		CHECK_BOOL(bool(mutex));
+		{
+			auto mutex_guard = mutex_lock_guard{ mutex.get() };
+
+			// ... do something with the locked resource
+		}
+
+		// If the mutex is created as initially owned then mutex_lock_guard can be initialized to skip the locking
+		auto mutex_reference = unique_handle{ CreateMutex(NoSecurityAttributes, InitiallyOwned, L"MutexName") };
+		auto createMutexResult = GetLastError();
+		CHECK_BOOL(bool(mutex_reference));
+		{
+			auto mutex_guard = mutex_lock_guard{ mutex_reference.get(), INFINITE, ERROR_ALREADY_EXISTS != createMutexResult };
+
+			// ... do something with the locked resource
+		}
+	}
 }
