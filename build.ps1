@@ -24,7 +24,7 @@ function Invoke-CMakeGenerator(
     )
 {
     $Runtime = $Runtime.ToLower()
-    $Directory = 'build_' + $Platform + '_' + $Runtime
+    $Directory = 'build_' + $VisualStudioVersion + '_' + $Platform + '_' + $Runtime
     if ($VisualStudioVersion -eq 'Vs2015')
     {
         $Generator = 'Visual Studio 14 2015'
