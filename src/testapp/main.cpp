@@ -66,7 +66,7 @@ void wmain()
     auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
     wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
 
-    // heap_ptr.hpp
+    // ptr_deleter.hpp
     //
     wcout << L"Calling memory allocation routines" << endl;
     auto hptr = heap_ptr{ HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };
@@ -83,7 +83,7 @@ void wmain()
     auto stringSid = local_ptr{ pStringSid };
     wcout << L"Sid: " << (LPTSTR)stringSid.get() << endl;
 
-    // ptr_deleter.hpp
+    // ptr_setter.hpp
     //
     auto sid2 = sid_ptr{};
     CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &ptr_setter(sid2)));
