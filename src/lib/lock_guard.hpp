@@ -20,6 +20,22 @@ namespace win32cpp
 		}
 	};
 
+	struct semaphore_lock_guard_traits
+	{
+		typedef HANDLE pointer;
+
+		static auto lock(pointer value, unsigned long timeout) throw() -> void
+		{
+			CHECK_WIN32(WaitForSingleObject(value, timeout));
+		}
+
+		static auto unlock(pointer value) throw() -> void
+		{
+			long count;
+			VERIFY(ReleaseSemaphore(value, 1L, &count));
+		}
+	};
+
 	template <typename Traits>
 	class basic_lock_guard
 	{
@@ -46,4 +62,5 @@ namespace win32cpp
 	};
 
 	typedef basic_lock_guard<mutex_lock_guard_traits> mutex_lock_guard;
+	typedef basic_lock_guard<semaphore_lock_guard_traits> semaphore_lock_guard;
 }
