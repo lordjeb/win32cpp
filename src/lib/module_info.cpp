@@ -25,6 +25,20 @@ namespace win32cpp
 		return &tempPathBuffer[0];
 	}
 
+	auto getWindowsPath() -> wstring
+	{
+		vector<wchar_t> tempPathBuffer(MAX_PATH);
+		CHECK_COUNT(GetWindowsDirectoryW(&tempPathBuffer[0], MAX_PATH));
+		return &tempPathBuffer[0];
+	}
+
+	auto getSystemPath() -> wstring
+	{
+		vector<wchar_t> tempPathBuffer(MAX_PATH);
+		CHECK_COUNT(GetSystemDirectoryW(&tempPathBuffer[0], MAX_PATH));
+		return &tempPathBuffer[0];
+	}
+
 	auto getThreadToken() -> unique_token_handle
 	{
 		HANDLE threadToken;
