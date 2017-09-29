@@ -43,6 +43,21 @@ namespace win32cpp
 		}
 	};
 
+	struct find_handle_traits
+	{
+		typedef HANDLE pointer;
+
+		static auto invalid() throw() -> pointer
+		{
+			return INVALID_HANDLE_VALUE;
+		}
+
+		static auto close(pointer value) throw() -> void
+		{
+			VERIFY(FindClose(value));
+		}
+	};
+
 	struct registry_handle_traits
 	{
 		typedef HKEY pointer;
@@ -242,6 +257,7 @@ namespace win32cpp
 
 	typedef basic_unique_handle<null_handle_traits> unique_handle;
 	typedef basic_unique_handle<invalid_handle_traits> unique_file_handle;
+	typedef basic_unique_handle<find_handle_traits> unique_find_handle;
 	typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
 	typedef basic_unique_handle<service_handle_traits> unique_service_handle;
 	typedef basic_unique_handle<http_handle_traits> unique_http_handle;

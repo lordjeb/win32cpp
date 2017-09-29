@@ -94,6 +94,11 @@ void wmain()
 	CHECK_BOOL(ConvertSidToStringSid(sid2.get(), (LPTSTR*)&ptr_setter(stringSid2)));
 	wcout << L"Sid: " << (LPTSTR)stringSid2.get() << endl;
 
+	// handle.hpp
+	//
+	WIN32_FIND_DATA find_data;
+	auto find_handle = unique_find_handle{ FindFirstFile(LR"(C:\*)", &find_data) };
+
 	// lock_guard.hpp
 	//
 	{
