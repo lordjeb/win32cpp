@@ -12,9 +12,23 @@
 #include <ptr_setter.hpp>
 #include <windows_constants.hpp>
 #include <lock_guard.hpp>
+#include <file_mapping.hpp>
 
 using namespace std;
 using namespace win32cpp;
+
+void test_file_mapping()
+{
+	auto file = unique_file_handle{ CreateFile(L"test", GENERIC_ALL, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, NULL) };
+	
+	auto file_mapping_impl = FileMappingImpl{};
+	auto mapping = unique_mapping_handle{ file_mapping_impl.CreateFileMapping(file.get(), NULL, PAGE_READWRITE, 0, 4096, NULL) };
+	if (mapping)
+	{
+		auto map_deleter = map_view_deleter{ &file_mapping_impl };
+		auto view = unique_ptr<void, map_view_deleter>{ file_mapping_impl.MapViewOfFile(mapping.get(), FILE_MAP_ALL_ACCESS, 0, 0, 4096), map_deleter };
+	}
+}
 
 void wmain()
 {
@@ -130,4 +144,6 @@ void wmain()
 			// ... do something with the locked resource
 		}
 	}
+
+	test_file_mapping();
 }

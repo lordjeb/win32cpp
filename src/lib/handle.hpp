@@ -256,6 +256,7 @@ namespace win32cpp
 	//
 
 	typedef basic_unique_handle<null_handle_traits> unique_handle;
+	typedef basic_unique_handle<null_handle_traits> unique_mapping_handle;
 	typedef basic_unique_handle<invalid_handle_traits> unique_file_handle;
 	typedef basic_unique_handle<find_handle_traits> unique_find_handle;
 	typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
