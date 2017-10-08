@@ -2,12 +2,14 @@
 #include "debug.hpp"
 #include <Windows.h>
 
-
-struct map_view_deleter
+namespace win32cpp
 {
-	typedef unsigned char* pointer;
-	auto operator()( pointer value ) const throw( ) -> void
+	struct map_view_deleter
 	{
-		VERIFY( UnmapViewOfFile( value ) );
-	}
-};
+		typedef unsigned char* pointer;
+		auto operator()( pointer value ) const throw( ) -> void
+		{
+			VERIFY( UnmapViewOfFile( value ) );
+		}
+	};
+}
