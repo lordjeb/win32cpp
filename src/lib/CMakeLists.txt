@@ -5,4 +5,5 @@ add_library(win32cpp STATIC
 	performance.cpp
 	privilege_guard.cpp
 	string_extensions.cpp
+	ioc/file_mapping.cpp
 )
