@@ -17,7 +17,7 @@ namespace win32cpp
                 _In_ DWORD dwMaximumSizeHigh,
                 _In_ DWORD dwMaximumSizeLow,
                 _In_opt_ LPCSTR lpName
-            ) -> HANDLE = 0;
+                ) -> HANDLE = 0;
     
             virtual auto CreateFileMappingW(
                 _In_ HANDLE hFile,
@@ -26,7 +26,7 @@ namespace win32cpp
                 _In_ DWORD dwMaximumSizeHigh,
                 _In_ DWORD dwMaximumSizeLow,
                 _In_opt_ LPCWSTR lpName
-            ) -> HANDLE = 0;
+                ) -> HANDLE = 0;
     
             virtual auto MapViewOfFile(
                 _In_ HANDLE hFileMappingObject,
