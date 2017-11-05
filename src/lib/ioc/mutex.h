@@ -8,69 +8,40 @@ namespace win32cpp
 		class IMutex
 		{
 		public:
-			virtual auto CloseHandle(_In_ HANDLE hObject)->BOOL = 0;
-
-			virtual auto CreateMutexA(
-				_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes,
-				_In_ BOOL bInitialOwner,
-				_In_opt_ LPCSTR lpName
-			)->HANDLE = 0;
-
-			virtual auto CreateMutexW(
-				_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes,
-				_In_ BOOL bInitialOwner,
-				_In_opt_ LPCWSTR lpName
-			)->HANDLE = 0;
-
-			virtual DWORD GetLastError() = 0;
-
-			virtual auto OpenMutexA(
-				_In_ DWORD dwDesiredAccess,
-				_In_ BOOL bInheritHandle,
-				_In_ LPCSTR lpName
-			)->HANDLE = 0;
-
-			virtual auto OpenMutexW(
-				_In_ DWORD dwDesiredAccess,
-				_In_ BOOL bInheritHandle,
-				_In_ LPCWSTR lpName
-			)->HANDLE = 0;
-
+			virtual auto CreateMutexA(_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes, _In_ BOOL bInitialOwner, _In_opt_ LPCSTR lpName)->HANDLE = 0;
+			virtual auto CreateMutexW(_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes, _In_ BOOL bInitialOwner, _In_opt_ LPCWSTR lpName)->HANDLE = 0;
+			virtual auto OpenMutexA(_In_ DWORD dwDesiredAccess, _In_ BOOL bInheritHandle, _In_ LPCSTR lpName)->HANDLE = 0;
+			virtual auto OpenMutexW(_In_ DWORD dwDesiredAccess, _In_ BOOL bInheritHandle, _In_ LPCWSTR lpName)->HANDLE = 0;
 			virtual auto ReleaseMutex(_In_ HANDLE hMutex)->BOOL = 0;
 		};
 
 		class MutexImpl : public IMutex
 		{
 		public:
-			auto CloseHandle(_In_ HANDLE hObject)->BOOL override;
+			virtual auto CreateMutexA(_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes, _In_ BOOL bInitialOwner, _In_opt_ LPCSTR lpName)->HANDLE override
+			{
+				return ::CreateMutexA(lpMutexAttributes, bInitialOwner, lpName);
+			}
 
-			auto CreateMutexA(
-				_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes,
-				_In_ BOOL bInitialOwner,
-				_In_opt_ LPCSTR lpName
-			)->HANDLE override;
+			virtual auto CreateMutexW(_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes, _In_ BOOL bInitialOwner, _In_opt_ LPCWSTR lpName)->HANDLE override
+			{
+				return ::CreateMutexW(lpMutexAttributes, bInitialOwner, lpName);
+			}
 
-			auto CreateMutexW(
-				_In_opt_ LPSECURITY_ATTRIBUTES lpMutexAttributes,
-				_In_ BOOL bInitialOwner,
-				_In_opt_ LPCWSTR lpName
-			)->HANDLE override;
+			virtual auto OpenMutexA(_In_ DWORD dwDesiredAccess, _In_ BOOL bInheritHandle, _In_ LPCSTR lpName)->HANDLE override
+			{
+				return ::OpenMutexA(dwDesiredAccess, bInheritHandle, lpName);
+			}
 
-			DWORD GetLastError() override;
+			virtual auto OpenMutexW(_In_ DWORD dwDesiredAccess, _In_ BOOL bInheritHandle, _In_ LPCWSTR lpName)->HANDLE override
+			{
+				return ::OpenMutexW(dwDesiredAccess, bInheritHandle, lpName);
+			}
 
-			auto OpenMutexA(
-				_In_ DWORD dwDesiredAccess,
-				_In_ BOOL bInheritHandle,
-				_In_ LPCSTR lpName
-			)->HANDLE override;
-
-			auto OpenMutexW(
-				_In_ DWORD dwDesiredAccess,
-				_In_ BOOL bInheritHandle,
-				_In_ LPCWSTR lpName
-			)->HANDLE override;
-
-			auto ReleaseMutex(_In_ HANDLE hMutex)->BOOL override;
+			virtual auto ReleaseMutex(_In_ HANDLE hMutex)->BOOL override
+			{
+				return ::ReleaseMutex(hMutex);
+			}
 		};
 	}
 }
