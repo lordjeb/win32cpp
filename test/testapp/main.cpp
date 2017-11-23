@@ -25,8 +25,7 @@ void test_file_mapping()
 	auto mapping = unique_mapping_handle{ file_mapping->CreateFileMapping(file.get(), NULL, PAGE_READWRITE, 0, 4096, NULL) };
 	if (mapping)
 	{
-		auto map_deleter = map_view_deleter{ file_mapping.get() };
-		auto view = unique_ptr<void, map_view_deleter>{ file_mapping->MapViewOfFile(mapping.get(), FILE_MAP_ALL_ACCESS, 0, 0, 4096), map_deleter };
+		auto view = unique_ptr<void, map_view_deleter>{ file_mapping->MapViewOfFile(mapping.get(), FILE_MAP_ALL_ACCESS, 0, 0, 4096), map_view_deleter{ file_mapping.get() } };
 	}
 }
 
