@@ -64,7 +64,7 @@ struct basic_unique_handle_test : public ::testing::Test
 	mock_handle_traits mock;
 };
 
-TEST(basic_unique_handle, is_noncopyable_and_moveable)
+TEST_F(basic_unique_handle_test, is_noncopyable_and_moveable)
 {
 	ASSERT_FALSE(std::is_copy_constructible<basic_unique_handle<mock_static_handle_traits>>::value);
 	ASSERT_FALSE(std::is_copy_assignable<basic_unique_handle<mock_static_handle_traits>>::value);
@@ -98,9 +98,6 @@ TEST_F(basic_unique_handle_test, closes_handle_when_reset)
 
 TEST_F(basic_unique_handle_test, doesnt_close_released_handle)
 {
-	mock_handle_traits mock;
-	handle_traits_bridge.m_ptr = &mock;
-
 	basic_unique_handle<mock_static_handle_traits> test_handle{ (HANDLE) 42 };
 	auto local_handle = test_handle.release();
 }
