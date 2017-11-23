@@ -52,6 +52,9 @@ endif()
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)
 
+#Use solution folders.
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(submodules)
