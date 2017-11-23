@@ -102,3 +102,6 @@ ipch/
 
 # Visual Studio Code
 .vscode
+
+# Build output
+Build_Vs*/
