@@ -1,8 +1,22 @@
-add_library(win32cpp STATIC 
+add_library(win32cpp STATIC
 	debug.cpp
 	error.cpp
 	module_info.cpp
 	performance.cpp
 	privilege_guard.cpp
 	string_extensions.cpp
+	debug.hpp
+	error.hpp
+	handle.hpp
+	lock_guard.hpp
+	map_view_deleter.hpp
+	module_info.hpp
+	performance.hpp
+	privilege_guard.hpp
+	ptr_deleter.hpp
+	ptr_setter.hpp
+	service.hpp
+	string_extensions.hpp
+	windows_constants.hpp
+	ioc/handle.h
 )
