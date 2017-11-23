@@ -1,6 +1,6 @@
 #pragma once
-#include "debug.hpp"
-#include "error.hpp"
+#include "debug.h"
+#include "error.h"
 #include <windows.h>
 
 namespace win32cpp

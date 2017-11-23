@@ -1,9 +1,9 @@
 #include "..\targetver.h"
-#include <debug.hpp>
-#include <error.hpp>
-#include <module_info.hpp>
-#include <string_extensions.hpp>
-#include <service.hpp>
+#include <debug.h>
+#include <error.h>
+#include <module_info.h>
+#include <string_extensions.h>
+#include <service.h>
 
 using namespace std;
 using namespace win32cpp;

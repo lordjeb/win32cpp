@@ -5,37 +5,43 @@ set(source_list
     performance.cpp
     privilege_guard.cpp
     string_extensions.cpp
-    debug.hpp
-    error.hpp
-    handle.hpp
-    lock_guard.hpp
-    map_view_deleter.hpp
-    module_info.hpp
-    performance.hpp
-    privilege_guard.hpp
-    ptr_deleter.hpp
-    ptr_setter.hpp
-    service.hpp
-    string_extensions.hpp
-    windows_constants.hpp
+)
+
+set(header_list
+    debug.h
+    error.h
+    handle.h
+    lock_guard.h
+    map_view_deleter.h
+    module_info.h
+    performance.h
+    privilege_guard.h
+    ptr_deleter.h
+    ptr_setter.h
+    service.h
+    string_extensions.h
+    windows_constants.h
     ioc/handle.h
 )
 
 add_library(win32cpp STATIC
     ${source_list}
+    ${header_list}
 )
 
-function(assign_source_group)
+function(assign_source_group prefix)
     foreach(_source IN ITEMS ${ARGN})
         if (IS_ABSOLUTE "${_source}")
             file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
         else()
             set(_source_rel "${_source}")
         endif()
+        string(CONCAT _source_rel "${prefix}" "/" "${_source_rel}")
         get_filename_component(_source_path "${_source_rel}" PATH)
         string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
         source_group("${_source_path_msvc}" FILES "${_source}")
     endforeach()
 endfunction(assign_source_group)
 
-assign_source_group(${source_list})
+assign_source_group("Source Files" ${source_list})
+assign_source_group("Header Files" ${header_list})

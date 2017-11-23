@@ -1,4 +1,4 @@
-#include "debug.hpp"
+#include "debug.h"
 #include <memory>
 #include <Windows.h>
 

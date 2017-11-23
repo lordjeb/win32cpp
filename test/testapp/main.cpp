@@ -2,17 +2,17 @@
 #include <iostream>
 #include <Windows.h>
 #include <Sddl.h>
-#include <debug.hpp>
-#include <error.hpp>
-#include <module_info.hpp>
-#include <string_extensions.hpp>
-#include <performance.hpp>
-#include <privilege_guard.hpp>
-#include <ptr_deleter.hpp>
-#include <ptr_setter.hpp>
-#include <windows_constants.hpp>
-#include <lock_guard.hpp>
-#include <map_view_deleter.hpp>
+#include <debug.h>
+#include <error.h>
+#include <module_info.h>
+#include <string_extensions.h>
+#include <performance.h>
+#include <privilege_guard.h>
+#include <ptr_deleter.h>
+#include <ptr_setter.h>
+#include <windows_constants.h>
+#include <lock_guard.h>
+#include <map_view_deleter.h>
 
 using namespace std;
 using namespace win32cpp;
@@ -31,7 +31,7 @@ void test_file_mapping()
 
 void wmain()
 {
-	// debug.hpp
+	// debug.h
 	//
 	ASSERT(true);
 
@@ -42,7 +42,7 @@ void wmain()
 
 	outputDebugStringEx(L"This is a test\n");
 
-	// error.hpp
+	// error.h
 	//
 	CHECK_HR(S_OK);
 	CHECK_BOOL(true);
@@ -52,7 +52,7 @@ void wmain()
 
 	wcout << getErrorMessage(ERROR_FILE_NOT_FOUND) << endl;
 
-	// string_extensions.hpp
+	// string_extensions.h
 	//
 	cout << "(" << trim(std::string{ "  text  " }) << ")" << endl;
 	wcout << L"(" << trim(std::wstring{ L"  text  " }) << L")" << endl;
@@ -64,24 +64,24 @@ void wmain()
 
 	wcout << L"(" << appendPath(L"C:", L"directory", L"filename.txt") << L")" << endl;
 
-	// module_info.hpp
+	// module_info.h
 	//
 	wcout << getModulePath() << endl;
 	wcout << getModuleFilename() << endl;
 	wcout << getTempPath() << endl;
 
-	// performance.hpp
+	// performance.h
 	//
 	wcout << measureElapsedTime([]() {Sleep(10); }) << endl;
 
-	// privilege_guard.hpp
+	// privilege_guard.h
 	//
 	auto threadToken = getThreadToken();
 	auto shutdown_privilege = privilege_guard{ threadToken.get(), L"SeShutdownPrivilege" }; // Disabled by default
 	auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
 	wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
 
-	// ptr_deleter.hpp
+	// ptr_deleter.h
 	//
 	wcout << L"Calling memory allocation routines" << endl;
 	auto hptr = heap_ptr{ HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };
@@ -98,7 +98,7 @@ void wmain()
 	auto stringSid = local_ptr{ pStringSid };
 	wcout << L"Sid: " << (LPTSTR)stringSid.get() << endl;
 
-	// ptr_setter.hpp
+	// ptr_setter.h
 	//
 	auto sid2 = sid_ptr{};
 	CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &ptr_setter(sid2)));
@@ -107,12 +107,12 @@ void wmain()
 	CHECK_BOOL(ConvertSidToStringSid(sid2.get(), (LPTSTR*)&ptr_setter(stringSid2)));
 	wcout << L"Sid: " << (LPTSTR)stringSid2.get() << endl;
 
-	// handle.hpp
+	// handle.h
 	//
 	WIN32_FIND_DATA find_data;
 	auto find_handle = unique_find_handle{ FindFirstFile(LR"(C:\*)", &find_data) };
 
-	// lock_guard.hpp
+	// lock_guard.h
 	//
 	{
 		auto mutex = unique_handle{ CreateMutex(NoSecurityAttributes, NotInitiallyOwned, L"MutexName") };

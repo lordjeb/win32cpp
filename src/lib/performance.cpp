@@ -1,5 +1,5 @@
-#include "error.hpp"
-#include "performance.hpp"
+#include "error.h"
+#include "performance.h"
 #include <functional>
 #include <windows.h>
 

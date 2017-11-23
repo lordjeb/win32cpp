@@ -1,5 +1,5 @@
-#include "debug.hpp"
-#include "module_info.hpp"
+#include "debug.h"
+#include "module_info.h"
 
 using namespace std;
 

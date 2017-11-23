@@ -1,6 +1,6 @@
-#include "privilege_guard.hpp"
-#include "error.hpp"
-#include "handle.hpp"
+#include "privilege_guard.h"
+#include "error.h"
+#include "handle.h"
 
 using namespace std;
 

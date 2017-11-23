@@ -1,5 +1,5 @@
 #pragma once
-#include "debug.hpp"
+#include "debug.h"
 #include <string>
 #include <Windows.h>
 

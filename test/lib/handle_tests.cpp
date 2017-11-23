@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
-#include "handle.hpp"
+#include "handle.h"
 
 using namespace win32cpp;
 

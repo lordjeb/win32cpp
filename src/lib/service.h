@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 #include <Windows.h>
-#include "debug.hpp"
-#include "error.hpp"
-#include "handle.hpp"
+#include "debug.h"
+#include "error.h"
+#include "handle.h"
 
 
 namespace win32cpp

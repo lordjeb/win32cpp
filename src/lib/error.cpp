@@ -1,6 +1,6 @@
-#include "error.hpp"
-#include "ptr_deleter.hpp"
-#include "string_extensions.hpp"
+#include "error.h"
+#include "ptr_deleter.h"
+#include "string_extensions.h"
 
 using namespace std;
 
