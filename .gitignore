@@ -105,3 +105,6 @@ ipch/
 
 # Build output
 Build_Vs*/
+
+# User build scripts
+build-user.cmd
