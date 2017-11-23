@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "win32api_abstractions.h"
 
 namespace win32cpp

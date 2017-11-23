@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "privilege_guard.h"
 #include "error.h"
 #include "handle.h"

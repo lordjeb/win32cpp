@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "debug.h"
 #include "module_info.h"
 

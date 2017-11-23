@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "debug.h"
-#include <memory>
-#include <Windows.h>
 
 win32cpp::tracer::tracer(wchar_t const* filename, unsigned const line)
     : m_filename{ filename }, m_line{ line }

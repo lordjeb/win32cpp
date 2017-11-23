@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "error.h"
 #include "ptr_deleter.h"
 #include "string_extensions.h"

@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "string_extensions.h"
-#include <codecvt>
 
 using namespace std;
 using namespace win32cpp;
