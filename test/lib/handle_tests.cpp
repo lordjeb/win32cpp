@@ -54,44 +54,45 @@ struct mock_static_handle_traits
 	}
 };
 
-TEST(basic_unique_handle, closes_handle)
+struct basic_unique_handle_test : public ::testing::Test
 {
-	mock_handle_traits mock;
-	handle_traits_bridge.m_ptr = &mock;
+	basic_unique_handle_test()
+	{
+		handle_traits_bridge.m_ptr = &mock;
+	}
 
+	mock_handle_traits mock;
+};
+
+TEST_F(basic_unique_handle_test, closes_handle)
+{
 	EXPECT_CALL(mock, close((HANDLE)42))
 		.Times(1);
 
-	basic_unique_handle<mock_static_handle_traits> yyy{ (HANDLE)42 };
+	basic_unique_handle<mock_static_handle_traits> test_handle{ (HANDLE)42 };
 }
 
-TEST(basic_unique_handle, doesnt_close_invalid_handle)
+TEST_F(basic_unique_handle_test, doesnt_close_invalid_handle)
 {
-	mock_handle_traits mock;
-	handle_traits_bridge.m_ptr = &mock;
-
-	basic_unique_handle<mock_static_handle_traits> yyy{};
+	basic_unique_handle<mock_static_handle_traits> test_handle{};
 }
 
-TEST(basic_unique_handle, closes_handle_when_reset)
+TEST_F(basic_unique_handle_test, closes_handle_when_reset)
 {
-	mock_handle_traits mock;
-	handle_traits_bridge.m_ptr = &mock;
-
 	EXPECT_CALL(mock, close((HANDLE) 42))
 		.Times(1);
 
-	basic_unique_handle<mock_static_handle_traits> yyy{ (HANDLE) 42 };
-	yyy.reset(NULL);
+	basic_unique_handle<mock_static_handle_traits> test_handle{ (HANDLE) 42 };
+	test_handle.reset(NULL);
 
-	ASSERT_EQ(NULL, yyy.get());
+	ASSERT_EQ(NULL, test_handle.get());
 }
 
-TEST(basic_unique_handle, doesnt_close_released_handle)
+TEST_F(basic_unique_handle_test, doesnt_close_released_handle)
 {
 	mock_handle_traits mock;
 	handle_traits_bridge.m_ptr = &mock;
 
-	basic_unique_handle<mock_static_handle_traits> yyy{ (HANDLE) 42 };
-	auto local_handle = yyy.release();
+	basic_unique_handle<mock_static_handle_traits> test_handle{ (HANDLE) 42 };
+	auto local_handle = test_handle.release();
 }
