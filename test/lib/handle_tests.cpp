@@ -4,6 +4,7 @@
 #include "handle.h"
 
 using namespace win32cpp;
+using testing::IsNull;
 
 // The following monstrosity of code is required in order to mock something that has static methods.
 // The basic_unique_handle needs a traits class with a static invalid() and close() method. gmock
@@ -93,7 +94,7 @@ TEST_F(basic_unique_handle_test, closes_handle_when_reset)
 	basic_unique_handle<mock_static_handle_traits> test_handle{ (HANDLE) 42 };
 	test_handle.reset(NULL);
 
-	ASSERT_EQ(NULL, test_handle.get());
+	ASSERT_THAT(test_handle.get(), IsNull());
 }
 
 TEST_F(basic_unique_handle_test, doesnt_close_released_handle)
