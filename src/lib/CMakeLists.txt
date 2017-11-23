@@ -25,6 +25,7 @@ set(header_list
 )
 
 add_library(win32cpp STATIC
+    ${CMAKE_SOURCE_DIR}/README.md
     ${source_list}
     ${header_list}
 )
