@@ -64,6 +64,14 @@ struct basic_unique_handle_test : public ::testing::Test
 	mock_handle_traits mock;
 };
 
+TEST(basic_unique_handle, is_noncopyable_and_moveable)
+{
+	ASSERT_FALSE(std::is_copy_constructible<basic_unique_handle<mock_static_handle_traits>>::value);
+	ASSERT_FALSE(std::is_copy_assignable<basic_unique_handle<mock_static_handle_traits>>::value);
+	ASSERT_TRUE(std::is_move_constructible<basic_unique_handle<mock_static_handle_traits>>::value);
+	ASSERT_TRUE(std::is_move_assignable<basic_unique_handle<mock_static_handle_traits>>::value);
+}
+
 TEST_F(basic_unique_handle_test, closes_handle)
 {
 	EXPECT_CALL(mock, close((HANDLE)42))
