@@ -1,7 +1,7 @@
 #pragma once
 #include "debug.h"
 #include <Windows.h>
-#include <ioc\file_mapping.h>
+#include <win32api_abstractions.h>
 
 namespace win32cpp
 {
