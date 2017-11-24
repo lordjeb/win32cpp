@@ -18,7 +18,7 @@ namespace win32cpp
 	{
 		typedef HANDLE pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return nullptr;
 		}
@@ -28,7 +28,7 @@ namespace win32cpp
 	{
 		typedef HANDLE pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return INVALID_HANDLE_VALUE;
 		}
@@ -38,7 +38,7 @@ namespace win32cpp
 	{
 		typedef HANDLE pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return INVALID_HANDLE_VALUE;
 		}
@@ -48,7 +48,7 @@ namespace win32cpp
 	{
 		typedef HKEY pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return nullptr;
 		}
@@ -58,7 +58,7 @@ namespace win32cpp
 	{
 		typedef SC_HANDLE pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return nullptr;
 		}
@@ -68,7 +68,7 @@ namespace win32cpp
 	{
 		typedef HINTERNET pointer;
 
-		static auto invalid() throw() -> pointer
+		static auto invalid() noexcept -> pointer
 		{
 			return nullptr;
 		}
@@ -106,12 +106,12 @@ namespace win32cpp
 		typedef typename Closer closer;
 
 	public:
-		explicit basic_unique_handle(const closer& closer, pointer value = Traits::invalid()) throw()
+		explicit basic_unique_handle(const closer& closer, pointer value = Traits::invalid()) noexcept
 			: m_value { value }, m_closer{ closer }
 		{
 		}
 
-		virtual ~basic_unique_handle() throw()
+		virtual ~basic_unique_handle() noexcept
 		{
 			close();
 		}
@@ -121,11 +121,11 @@ namespace win32cpp
 		basic_unique_handle& operator=(const basic_unique_handle&) = delete;
 
 		//	Move
-		basic_unique_handle(basic_unique_handle&& o) throw() : m_value { o.release() }
+		basic_unique_handle(basic_unique_handle&& o) noexcept : m_value { o.release() }
 		{
 		}
 
-		auto operator=(basic_unique_handle&& o) throw() -> basic_unique_handle&
+		auto operator=(basic_unique_handle&& o) noexcept -> basic_unique_handle&
 		{
 			if (this != &o)
 			{
@@ -134,17 +134,17 @@ namespace win32cpp
 			return *this;
 		}
 
-		explicit operator bool() const throw()
+		explicit operator bool() const noexcept
 		{
 			return Traits::invalid() != m_value;
 		}
 
-		auto get() const throw() -> pointer
+		auto get() const noexcept -> pointer
 		{
 			return m_value;
 		}
 
-		auto get_address_of() throw() -> pointer*
+		auto get_address_of() noexcept -> pointer*
 		{
 			ASSERT(!*this);
 			return &m_value;
@@ -155,14 +155,14 @@ namespace win32cpp
 			return m_closer;
 		}
 
-		auto release() throw() -> pointer
+		auto release() noexcept -> pointer
 		{
 			auto value = m_value;
 			m_value = Traits::invalid();
 			return value;
 		}
 
-		auto reset(pointer value = Traits::invalid()) throw() -> bool
+		auto reset(pointer value = Traits::invalid()) noexcept -> bool
 		{
 			if (m_value != value)
 			{
@@ -172,7 +172,7 @@ namespace win32cpp
 			return static_cast<bool>(*this);
 		}
 
-		auto swap(basic_unique_handle<Traits, Closer>& other) throw() -> void
+		auto swap(basic_unique_handle<Traits, Closer>& other) noexcept -> void
 		{
 			std::swap(m_value, other.m_value);
 		}
@@ -181,7 +181,7 @@ namespace win32cpp
 		pointer m_value;
 		closer m_closer;
 
-		auto close() throw() -> void
+		auto close() noexcept -> void
 		{
 			if (*this)
 			{
@@ -191,49 +191,49 @@ namespace win32cpp
 	};
 
 	template <typename Traits, typename Closer>
-	auto swap(basic_unique_handle<Traits, Closer>& left, basic_unique_handle<Traits, Closer>& right) throw() -> void
+	auto swap(basic_unique_handle<Traits, Closer>& left, basic_unique_handle<Traits, Closer>& right) noexcept -> void
 	{
 		left.swap(right);
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator==(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator==(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() == right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator!=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator!=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() != right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator>(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator>(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() > right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator>=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator>=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() >= right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator<(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator<(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() < right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto operator<=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
+	auto operator<=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
 	{
 		return left.get() <= right.get();
 	}
 
 	template <typename Traits, typename Closer>
-	auto waitable_handles(const std::vector<basic_unique_handle<Traits, Closer>>& v) throw() -> const std::vector<typename Traits::pointer>
+	auto waitable_handles(const std::vector<basic_unique_handle<Traits, Closer>>& v) noexcept -> const std::vector<typename Traits::pointer>
 	{
 		std::vector<typename Traits::pointer> r;
 		for (auto& h : v)
@@ -260,12 +260,12 @@ namespace win32cpp
 	//	bool m_impersonating;
 
 	//public:
-	//	explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) throw()
+	//	explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) noexcept
 	//		: basic_unique_handle<null_handle_traits>(value)
 	//	{
 	//	}
 
-	//	virtual ~unique_token_handle() throw()
+	//	virtual ~unique_token_handle() noexcept
 	//	{
 	//		if (m_impersonating)
 	//		{
@@ -278,12 +278,12 @@ namespace win32cpp
 	//	unique_token_handle& operator=(const unique_token_handle&) = delete;
 
 	//	//	Move
-	//	unique_token_handle(unique_token_handle&& o) throw()
+	//	unique_token_handle(unique_token_handle&& o) noexcept
 	//		: m_impersonating{ o.m_impersonating }
 	//	{
 	//	}
 
-	//	auto operator=(unique_token_handle&& o) throw() -> basic_unique_handle&
+	//	auto operator=(unique_token_handle&& o) noexcept -> basic_unique_handle&
 	//	{
 	//		if (this != &o)
 	//		{

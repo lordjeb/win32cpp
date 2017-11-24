@@ -9,12 +9,12 @@ namespace win32cpp
 	{
 		typedef HANDLE pointer;
 
-		static auto lock(pointer value, unsigned long timeout) throw() -> void
+		static auto lock(pointer value, unsigned long timeout) noexcept -> void
 		{
 			CHECK_WIN32(WaitForSingleObject(value, timeout));
 		}
 
-		static auto unlock(pointer value) throw() -> void
+		static auto unlock(pointer value) noexcept -> void
 		{
 			VERIFY(ReleaseMutex(value));
 		}
@@ -24,12 +24,12 @@ namespace win32cpp
 	{
 		typedef HANDLE pointer;
 
-		static auto lock(pointer value, unsigned long timeout) throw() -> void
+		static auto lock(pointer value, unsigned long timeout) noexcept -> void
 		{
 			CHECK_WIN32(WaitForSingleObject(value, timeout));
 		}
 
-		static auto unlock(pointer value) throw() -> void
+		static auto unlock(pointer value) noexcept -> void
 		{
 			long count;
 			VERIFY(ReleaseSemaphore(value, 1L, &count));
@@ -43,7 +43,7 @@ namespace win32cpp
 		typedef typename Traits::pointer pointer;
 
 	public:
-		explicit basic_lock_guard(pointer value, unsigned long timeout = INFINITE, bool owned = false) throw()
+		explicit basic_lock_guard(pointer value, unsigned long timeout = INFINITE, bool owned = false) noexcept
 			: m_value{ value }
 		{
 			if (!owned)
@@ -52,7 +52,7 @@ namespace win32cpp
 			}
 		}
 
-		virtual ~basic_lock_guard() throw()
+		virtual ~basic_lock_guard() noexcept
 		{
 			Traits::unlock(m_value);
 		}

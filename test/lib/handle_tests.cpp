@@ -18,7 +18,7 @@ using testing::Eq;
 struct mock_handle_traits
 {
 	typedef HANDLE pointer;
-	static auto invalid() throw() -> pointer
+	static auto invalid() noexcept -> pointer
 	{
 		return INVALID_HANDLE_VALUE;
 	}
