@@ -4,6 +4,7 @@
 #include <vector>
 #include <windows.h>
 #include <winhttp.h>
+#include "win32api_abstractions.h"
 
 //using namespace std;
 
@@ -21,11 +22,6 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
-
-		static auto close(pointer value) throw() -> void
-		{
-			VERIFY(CloseHandle(value));
-		}
 	};
 
 	struct invalid_handle_traits
@@ -35,11 +31,6 @@ namespace win32cpp
 		static auto invalid() throw() -> pointer
 		{
 			return INVALID_HANDLE_VALUE;
-		}
-
-		static auto close(pointer value) throw() -> void
-		{
-			VERIFY(CloseHandle(value));
 		}
 	};
 
@@ -51,11 +42,6 @@ namespace win32cpp
 		{
 			return INVALID_HANDLE_VALUE;
 		}
-
-		static auto close(pointer value) throw() -> void
-		{
-			VERIFY(FindClose(value));
-		}
 	};
 
 	struct registry_handle_traits
@@ -65,17 +51,6 @@ namespace win32cpp
 		static auto invalid() throw() -> pointer
 		{
 			return nullptr;
-		}
-
-		static auto close(pointer value) throw() -> void
-		{
-			//	For usermode code, rather than list the explicit predefined keys, we will say that
-			//	anything with the most significant bit set should not be closed. That is what kernel
-			//	handles look like, so we should be okay as long as dealing with registry keys.
-			if (value < HKEY_CLASSES_ROOT)
-			{
-				VERIFY(ERROR_SUCCESS == RegCloseKey(value));
-			}
 		}
 	};
 
@@ -87,11 +62,6 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
-
-		static auto close(pointer value) throw() -> void
-		{
-			VERIFY(CloseServiceHandle(value));
-		}
 	};
 
 	struct http_handle_traits
@@ -102,10 +72,25 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
+	};
 
-		static auto close(pointer value) throw() -> void
+	template <typename Traits>
+	class handle_closer
+	{
+	private:
+		std::shared_ptr<IFile> m_pFile;
+
+	protected:
+		typedef typename Traits::pointer pointer;
+
+	public:
+		handle_closer(std::shared_ptr<IFile> pFile) : m_pFile{ pFile }
 		{
-			VERIFY(WinHttpCloseHandle(value));
+		}
+
+		auto operator()(pointer value) -> void
+		{
+			VERIFY(m_pFile->CloseHandle(value));
 		}
 	};
 
@@ -113,15 +98,16 @@ namespace win32cpp
 	//	basic_unique_handle. Class template for a handle wrapper that allows only a single owner.
 	//
 
-	template <typename Traits>
+	template <typename Traits, typename Closer>
 	class basic_unique_handle
 	{
 	protected:
 		typedef typename Traits::pointer pointer;
+		typedef typename Closer closer;
 
 	public:
-		explicit basic_unique_handle(pointer value = Traits::invalid()) throw()
-			: m_value { value }
+		explicit basic_unique_handle(const closer& closer, pointer value = Traits::invalid()) throw()
+			: m_value { value }, m_closer{ closer }
 		{
 		}
 
@@ -164,6 +150,11 @@ namespace win32cpp
 			return &m_value;
 		}
 
+		auto get_closer() -> Closer
+		{
+			return m_closer;
+		}
+
 		auto release() throw() -> pointer
 		{
 			auto value = m_value;
@@ -181,67 +172,68 @@ namespace win32cpp
 			return static_cast<bool>(*this);
 		}
 
-		auto swap(basic_unique_handle<Traits>& other) throw() -> void
+		auto swap(basic_unique_handle<Traits, Closer>& other) throw() -> void
 		{
 			std::swap(m_value, other.m_value);
 		}
 
 	private:
 		pointer m_value;
+		closer m_closer;
 
 		auto close() throw() -> void
 		{
 			if (*this)
 			{
-				Traits::close(m_value);
+				m_closer(m_value);
 			}
 		}
 	};
 
-	template <typename Traits>
-	auto swap(basic_unique_handle<Traits>& left, basic_unique_handle<Traits>& right) throw() -> void
+	template <typename Traits, typename Closer>
+	auto swap(basic_unique_handle<Traits, Closer>& left, basic_unique_handle<Traits, Closer>& right) throw() -> void
 	{
 		left.swap(right);
 	}
 
-	template <typename Traits>
-	auto operator==(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator==(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() == right.get();
 	}
 
-	template <typename Traits>
-	auto operator!=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator!=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() != right.get();
 	}
 
-	template <typename Traits>
-	auto operator>(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator>(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() > right.get();
 	}
 
-	template <typename Traits>
-	auto operator>=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator>=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() >= right.get();
 	}
 
-	template <typename Traits>
-	auto operator<(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator<(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() < right.get();
 	}
 
-	template <typename Traits>
-	auto operator<=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) throw() -> bool
+	template <typename Traits, typename Closer>
+	auto operator<=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) throw() -> bool
 	{
 		return left.get() <= right.get();
 	}
 
-	template <typename Traits>
-	auto waitable_handles(const std::vector<basic_unique_handle<Traits>>& v) throw() -> const std::vector<typename Traits::pointer>
+	template <typename Traits, typename Closer>
+	auto waitable_handles(const std::vector<basic_unique_handle<Traits, Closer>>& v) throw() -> const std::vector<typename Traits::pointer>
 	{
 		std::vector<typename Traits::pointer> r;
 		for (auto& h : v)
@@ -255,51 +247,51 @@ namespace win32cpp
 	//	Typedef specializations.
 	//
 
-	typedef basic_unique_handle<null_handle_traits> unique_handle;
-	typedef basic_unique_handle<null_handle_traits> unique_mapping_handle;
-	typedef basic_unique_handle<invalid_handle_traits> unique_file_handle;
-	typedef basic_unique_handle<find_handle_traits> unique_find_handle;
-	typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
-	typedef basic_unique_handle<service_handle_traits> unique_service_handle;
-	typedef basic_unique_handle<http_handle_traits> unique_http_handle;
+	typedef basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>> unique_handle;
+	typedef basic_unique_handle<null_handle_traits, handle_closer<invalid_handle_traits>> unique_mapping_handle;
+	typedef basic_unique_handle<invalid_handle_traits, handle_closer<invalid_handle_traits>> unique_file_handle;
+	typedef basic_unique_handle<find_handle_traits, handle_closer<find_handle_traits>> unique_find_handle;
+	typedef basic_unique_handle<registry_handle_traits, handle_closer<registry_handle_traits>> unique_registry_handle;
+	typedef basic_unique_handle<service_handle_traits, handle_closer<service_handle_traits>> unique_service_handle;
+	typedef basic_unique_handle<http_handle_traits, handle_closer<http_handle_traits>> unique_http_handle;
 
-	class unique_token_handle : public basic_unique_handle<null_handle_traits>
-	{
-		bool m_impersonating;
+	//class unique_token_handle : public basic_unique_handle<null_handle_traits>
+	//{
+	//	bool m_impersonating;
 
-	public:
-		explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) throw()
-			: basic_unique_handle<null_handle_traits>(value)
-		{
-		}
+	//public:
+	//	explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) throw()
+	//		: basic_unique_handle<null_handle_traits>(value)
+	//	{
+	//	}
 
-		virtual ~unique_token_handle() throw()
-		{
-			if (m_impersonating)
-			{
-				CHECK_BOOL(RevertToSelf());
-			}
-		}
+	//	virtual ~unique_token_handle() throw()
+	//	{
+	//		if (m_impersonating)
+	//		{
+	//			CHECK_BOOL(RevertToSelf());
+	//		}
+	//	}
 
-		//	Copy (deleted)
-		unique_token_handle(const unique_token_handle&) = delete;
-		unique_token_handle& operator=(const unique_token_handle&) = delete;
+	//	//	Copy (deleted)
+	//	unique_token_handle(const unique_token_handle&) = delete;
+	//	unique_token_handle& operator=(const unique_token_handle&) = delete;
 
-		//	Move
-		unique_token_handle(unique_token_handle&& o) throw()
-			: m_impersonating{ o.m_impersonating }
-		{
-		}
+	//	//	Move
+	//	unique_token_handle(unique_token_handle&& o) throw()
+	//		: m_impersonating{ o.m_impersonating }
+	//	{
+	//	}
 
-		auto operator=(unique_token_handle&& o) throw() -> basic_unique_handle&
-		{
-			if (this != &o)
-			{
-				m_impersonating = o.m_impersonating;
+	//	auto operator=(unique_token_handle&& o) throw() -> basic_unique_handle&
+	//	{
+	//		if (this != &o)
+	//		{
+	//			m_impersonating = o.m_impersonating;
 
-				o.m_impersonating = false;
-			}
-			return *this;
-		}
-	};
+	//			o.m_impersonating = false;
+	//		}
+	//		return *this;
+	//	}
+	//};
 }

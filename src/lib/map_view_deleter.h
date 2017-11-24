@@ -8,17 +8,17 @@ namespace win32cpp
 	class map_view_deleter
 	{
 	public:
-		explicit map_view_deleter(IFileMapping* file_mapping)
-			: m_file_mapping{ file_mapping }
+		explicit map_view_deleter(std::shared_ptr<IFile> pFile)
+			: m_pFile{ pFile }
 		{
 		}
 
 		auto operator()(void* value) const throw( ) -> void
 		{
-			VERIFY( m_file_mapping->UnmapViewOfFile( value ) );
+			VERIFY( m_pFile->UnmapViewOfFile( value ) );
 		}
 
 	private:
-		IFileMapping* m_file_mapping;
+		std::shared_ptr<IFile> m_pFile;
 	};
 }

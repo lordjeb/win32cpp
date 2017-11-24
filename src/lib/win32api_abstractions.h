@@ -11,19 +11,16 @@ namespace win32cpp
 			virtual auto GetLastError()->DWORD = 0;
 		};
 
-		class IFileMapping
+		class IFile
 		{
 		public:
+			virtual auto CloseHandle(_In_ HANDLE hObject)->BOOL = 0;
+			virtual auto CreateFileA(_In_ LPCSTR lpFileName, _In_ DWORD dwDesiredAccess, _In_ DWORD dwShareMode, _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes, _In_ DWORD dwCreationDisposition, _In_ DWORD dwFlagsAndAttributes, _In_opt_ HANDLE hTemplateFile)->HANDLE = 0;
+			virtual auto CreateFileW(_In_ LPCWSTR lpFileName, _In_ DWORD dwDesiredAccess, _In_ DWORD dwShareMode, _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes, _In_ DWORD dwCreationDisposition, _In_ DWORD dwFlagsAndAttributes, _In_opt_ HANDLE hTemplateFile)->HANDLE = 0;
 			virtual auto CreateFileMappingA(_In_ HANDLE hFile, _In_opt_ LPSECURITY_ATTRIBUTES lpFileMappingAttributes, _In_ DWORD flProtect, _In_ DWORD dwMaximumSizeHigh, _In_ DWORD dwMaximumSizeLow, _In_opt_ LPCSTR lpName)->HANDLE = 0;
 			virtual auto CreateFileMappingW(_In_ HANDLE hFile, _In_opt_ LPSECURITY_ATTRIBUTES lpFileMappingAttributes, _In_ DWORD flProtect, _In_ DWORD dwMaximumSizeHigh, _In_ DWORD dwMaximumSizeLow, _In_opt_ LPCWSTR lpName)->HANDLE = 0;
 			virtual auto MapViewOfFile(_In_ HANDLE hFileMappingObject, _In_ DWORD dwDesiredAccess, _In_ DWORD dwFileOffsetHigh, _In_ DWORD dwFileOffsetLow, _In_ SIZE_T dwNumberOfBytesToMap)->LPVOID = 0;
 			virtual auto UnmapViewOfFile(_In_ LPCVOID lpBaseAddress)->BOOL = 0;
-		};
-
-		class IHandle
-		{
-		public:
-			virtual auto CloseHandle(_In_ HANDLE hObject)->BOOL = 0;
 		};
 
 		class IMutex
@@ -50,19 +47,16 @@ namespace win32cpp
 			virtual auto GetLastError()->DWORD override;
 		};
 
-		class FileMappingImpl : public IFileMapping
+		class FileImpl : public IFile
 		{
 		public:
+			virtual auto CloseHandle(_In_ HANDLE hObject)->BOOL override;
+			virtual auto CreateFileA(_In_ LPCSTR lpFileName, _In_ DWORD dwDesiredAccess, _In_ DWORD dwShareMode, _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes, _In_ DWORD dwCreationDisposition, _In_ DWORD dwFlagsAndAttributes, _In_opt_ HANDLE hTemplateFile)->HANDLE override;
+			virtual auto CreateFileW(_In_ LPCWSTR lpFileName, _In_ DWORD dwDesiredAccess, _In_ DWORD dwShareMode, _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes, _In_ DWORD dwCreationDisposition, _In_ DWORD dwFlagsAndAttributes, _In_opt_ HANDLE hTemplateFile)->HANDLE override;
 			virtual auto CreateFileMappingA(_In_ HANDLE hFile, _In_opt_ LPSECURITY_ATTRIBUTES lpFileMappingAttributes, _In_ DWORD flProtect, _In_ DWORD dwMaximumSizeHigh, _In_ DWORD dwMaximumSizeLow, _In_opt_ LPCSTR lpName)->HANDLE override;
 			virtual auto CreateFileMappingW(_In_ HANDLE hFile, _In_opt_ LPSECURITY_ATTRIBUTES lpFileMappingAttributes, _In_ DWORD flProtect, _In_ DWORD dwMaximumSizeHigh, _In_ DWORD dwMaximumSizeLow, _In_opt_ LPCWSTR lpName)->HANDLE override;
 			virtual auto MapViewOfFile(_In_ HANDLE hFileMappingObject, _In_ DWORD dwDesiredAccess, _In_ DWORD dwFileOffsetHigh, _In_ DWORD dwFileOffsetLow, _In_ SIZE_T dwNumberOfBytesToMap)->LPVOID override;
 			virtual auto UnmapViewOfFile(_In_ LPCVOID lpBaseAddress)->BOOL override;
-		};
-
-		class HandleImpl : public IHandle
-		{
-		public:
-			virtual auto CloseHandle(_In_ HANDLE hObject)->BOOL override;
 		};
 
 		class MutexImpl : public IMutex

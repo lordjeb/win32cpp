@@ -8,5 +8,5 @@ namespace win32cpp
 	auto getTempPath()->std::wstring;
 	auto getWindowsPath()->std::wstring;
 	auto getSystemPath()->std::wstring;
-	auto getThreadToken()->unique_token_handle;
+	//auto getThreadToken()->unique_token_handle;
 }

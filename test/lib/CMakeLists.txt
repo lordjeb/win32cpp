@@ -1,7 +1,9 @@
 set(source_list
+	win32api_mocks.h
 	error_tests.cpp
 	handle_tests.cpp
 	string_extensions_tests.cpp
+	proving_ground.cpp
 )
 
 ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
