@@ -1,4 +1,5 @@
 set(source_list
+	error_tests.cpp
 	handle_tests.cpp
 	string_extensions_tests.cpp
 )

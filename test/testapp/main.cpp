@@ -42,16 +42,6 @@ void wmain()
 
 	outputDebugStringEx(L"This is a test\n");
 
-	// error.h
-	//
-	CHECK_HR(S_OK);
-	CHECK_BOOL(true);
-	CHECK_BOOL(TRUE);
-	CHECK_WIN32(ERROR_SUCCESS);
-	CHECK(ERROR_SUCCESS, ERROR_SUCCESS);
-
-	wcout << getErrorMessage(ERROR_FILE_NOT_FOUND) << endl;
-
 	// module_info.h
 	//
 	wcout << getModulePath() << endl;
