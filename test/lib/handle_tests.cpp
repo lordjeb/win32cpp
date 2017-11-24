@@ -3,6 +3,7 @@
 
 using namespace win32cpp;
 using testing::IsNull;
+using testing::NiceMock;
 
 // The following monstrosity of code is required in order to mock something that has static methods.
 // The basic_unique_handle needs a traits class with a static invalid() and close() method. gmock
@@ -60,7 +61,7 @@ struct basic_unique_handle_test : public ::testing::Test
 		handle_traits_bridge.m_ptr = &mock;
 	}
 
-	mock_handle_traits mock;
+	NiceMock<mock_handle_traits> mock;
 };
 
 TEST_F(basic_unique_handle_test, is_noncopyable_and_moveable)

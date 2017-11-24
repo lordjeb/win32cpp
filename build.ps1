@@ -52,6 +52,7 @@ function Invoke-CMakeGenerator(
 
     Write-Output "$cmake --build $Directory --config $Config"
     & $cmake --build $Directory --config $Config
+    & "$Directory\test\lib\$Config\lib_tests.exe"
 }
 
 if ($Runtime -eq 'All')
