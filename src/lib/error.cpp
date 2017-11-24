@@ -11,5 +11,5 @@ wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_
 	auto flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM;
 	CHECK_COUNT(FormatMessageW(flags, nullptr, errorCode, languageId, LPWSTR(&pString), 0, nullptr));
 	auto x = heap_ptr{ pString };
-	return trimRight(wstring{ static_cast<wchar_t*>(x.get()) });
+	return trimRight(static_cast<const wchar_t*>(x.get()), isspace);
 }

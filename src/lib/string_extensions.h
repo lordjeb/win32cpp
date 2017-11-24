@@ -4,6 +4,12 @@
 
 namespace win32cpp
 {
+	_When_(_Param_(1) == 0, _Post_equal_to_(0))
+		_Check_return_ _CRT_JIT_INTRINSIC inline int __cdecl ispath(_In_ int _C)
+	{
+		return _C == L'\\' || _C == L'/';
+	}
+
 	// Appends two sections of path together with a backslash separator, ensuring that
 	// there are no extra separators
 	template<typename... Args>
@@ -12,16 +18,10 @@ namespace win32cpp
 		std::wstring result;
 		int unpack[]{ 0,
 			(result += result.empty()
-				? trimPath(to_wstring(args))
-				: L'\\' + trimPath(to_wstring(args)), 0
+				? trimRight(to_wstring(args), ispath)
+				: L'\\' + trim(to_wstring(args), ispath), 0
 			)... };
 		return result;
-	}
-
-	_When_(_Param_(1) == 0, _Post_equal_to_(0))
-	_Check_return_ _CRT_JIT_INTRINSIC inline int __cdecl ispath(_In_ int _C)
-	{
-		return _C == L'\\' || _C == L'/';
 	}
 
 	// Convert a std::string to a std::wstring
@@ -30,37 +30,28 @@ namespace win32cpp
 	inline std::wstring const& to_wstring(std::wstring const& s) { return s; }
 
 	// Trim whitespace characters from the beginning and end of a string
-	template <typename T>
-	auto trim(const std::basic_string<T> & s) -> std::basic_string<T>
+	template <typename _Px>
+	auto trim(const std::wstring& s, _Px pred) -> std::wstring
 	{
-		auto front = std::find_if_not(begin(s), end(s), isspace);
-		auto back = std::find_if_not(rbegin(s), rend(s), isspace);
-		return std::basic_string<T>{ front, back.base() };
+		auto front = std::find_if_not(begin(s), end(s), pred);
+		auto back = std::find_if_not(rbegin(s), rend(s), pred);
+		return std::wstring{ front, back.base() };
 	}
 
 	// Trim whitespace characters from the beginning of a string
-	template <typename T>
-	auto trimLeft(const std::basic_string<T> & s) -> std::basic_string<T>
+	template <typename _Px>
+	auto trimLeft(const std::wstring& s, _Px pred) -> std::wstring
 	{
-		auto front = std::find_if_not(begin(s), end(s), isspace);
-		return std::basic_string<T>{ front, end(s) };
-	}
-
-	// Trim path separator characters from the beginning and end of a string
-	template <typename T>
-	auto trimPath(const std::basic_string<T> & s) -> std::basic_string<T>
-	{
-		auto front = std::find_if_not(begin(s), end(s), ispath);
-		auto back = std::find_if_not(rbegin(s), rend(s), ispath);
-		return std::basic_string<T>{ front, back.base() };
+		auto front = std::find_if_not(begin(s), end(s), pred);
+		return std::wstring{ front, end(s) };
 	}
 
 	// Trim whitespace from the end of a string
-	template <typename T>
-	auto trimRight(const std::basic_string<T> & s) -> std::basic_string<T>
+	template <typename _Px>
+	auto trimRight(const std::wstring& s, _Px pred) -> std::wstring
 	{
-		auto back = std::find_if_not(rbegin(s), rend(s), isspace);
-		return std::basic_string<T>{ begin(s), back.base() };
+		auto back = std::find_if_not(rbegin(s), rend(s), pred);
+		return std::wstring{ begin(s), back.base() };
 	}
 
 	// Convert a std::wstring to a std::string

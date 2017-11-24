@@ -1,5 +1,11 @@
-add_executable(lib_tests 
+set(source_list
 	handle_tests.cpp
+	string_extensions_tests.cpp
+)
+
+ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
+add_executable(lib_tests 
+	${source_list}
 	)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/lib)

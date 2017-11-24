@@ -1,6 +1,4 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <memory>
+#include "pch.h"
 #include "handle.h"
 
 using namespace win32cpp;

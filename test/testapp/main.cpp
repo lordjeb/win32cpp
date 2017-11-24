@@ -52,18 +52,6 @@ void wmain()
 
 	wcout << getErrorMessage(ERROR_FILE_NOT_FOUND) << endl;
 
-	// string_extensions.h
-	//
-	cout << "(" << trim(std::string{ "  text  " }) << ")" << endl;
-	wcout << L"(" << trim(std::wstring{ L"  text  " }) << L")" << endl;
-	cout << "(" << trimLeft(std::string{ "  text  " }) << ")" << endl;
-	wcout << L"(" << trimLeft(std::wstring{ L"  text  " }) << L")" << endl;
-	cout << "(" << trimRight(std::string{ "  text  " }) << ")" << endl;
-	wcout << L"(" << trimRight(std::wstring{ L"  text  " }) << L")" << endl;
-	wcout << L"(" << trimPath(std::wstring{ LR"(\directory\)" }) << L")" << endl;
-
-	wcout << L"(" << appendPath(L"C:", L"directory", L"filename.txt") << L")" << endl;
-
 	// module_info.h
 	//
 	wcout << getModulePath() << endl;
