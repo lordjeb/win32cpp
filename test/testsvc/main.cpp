@@ -1,4 +1,4 @@
-#include "..\targetver.h"
+#include "..\..\targetver.h"
 #include <debug.h>
 #include <error.h>
 #include <module_info.h>

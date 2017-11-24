@@ -1,4 +1,4 @@
-#include "..\targetver.h"
+#include "..\..\targetver.h"
 #include <iostream>
 #include <Windows.h>
 #include <Sddl.h>
