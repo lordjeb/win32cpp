@@ -1,10 +1,10 @@
 #pragma once
 #include "debug.h"
 #include "error.h"
-#include <vector>
-#include <windows.h>
-#include <winhttp.h>
 #include "win32api_abstractions.h"
+#include <memory>
+#include <vector>
+#include <winhttp.h>
 
 //using namespace std;
 
@@ -255,43 +255,43 @@ namespace win32cpp
 	typedef basic_unique_handle<service_handle_traits, handle_closer<service_handle_traits>> unique_service_handle;
 	typedef basic_unique_handle<http_handle_traits, handle_closer<http_handle_traits>> unique_http_handle;
 
-	//class unique_token_handle : public basic_unique_handle<null_handle_traits>
-	//{
-	//	bool m_impersonating;
+	class unique_token_handle : public basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>
+	{
+		bool m_impersonating;
 
-	//public:
-	//	explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) noexcept
-	//		: basic_unique_handle<null_handle_traits>(value)
-	//	{
-	//	}
+	public:
+		explicit unique_token_handle(const basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>::closer& closer, basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>::pointer value = null_handle_traits::invalid(), bool impersonating = false) noexcept
+			: basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>(closer, value)
+		{
+		}
 
-	//	virtual ~unique_token_handle() noexcept
-	//	{
-	//		if (m_impersonating)
-	//		{
-	//			CHECK_BOOL(RevertToSelf());
-	//		}
-	//	}
+		virtual ~unique_token_handle() noexcept
+		{
+			if (m_impersonating)
+			{
+				CHECK_BOOL(RevertToSelf());
+			}
+		}
 
-	//	//	Copy (deleted)
-	//	unique_token_handle(const unique_token_handle&) = delete;
-	//	unique_token_handle& operator=(const unique_token_handle&) = delete;
+		//	Copy (deleted)
+		unique_token_handle(const unique_token_handle&) = delete;
+		unique_token_handle& operator=(const unique_token_handle&) = delete;
 
-	//	//	Move
-	//	unique_token_handle(unique_token_handle&& o) noexcept
-	//		: m_impersonating{ o.m_impersonating }
-	//	{
-	//	}
+		//	Move
+		unique_token_handle(unique_token_handle&& o) noexcept
+			: m_impersonating{ o.m_impersonating }
+		{
+		}
 
-	//	auto operator=(unique_token_handle&& o) noexcept -> basic_unique_handle&
-	//	{
-	//		if (this != &o)
-	//		{
-	//			m_impersonating = o.m_impersonating;
+		auto operator=(unique_token_handle&& o) noexcept -> basic_unique_handle&
+		{
+			if (this != &o)
+			{
+				m_impersonating = o.m_impersonating;
 
-	//			o.m_impersonating = false;
-	//		}
-	//		return *this;
-	//	}
-	//};
+				o.m_impersonating = false;
+			}
+			return *this;
+		}
+	};
 }

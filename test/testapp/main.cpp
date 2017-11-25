@@ -1,5 +1,6 @@
 #include "..\..\targetver.h"
 #include <iostream>
+#include <memory>
 #include <Windows.h>
 #include <Sddl.h>
 #include <debug.h>
@@ -16,18 +17,6 @@
 
 using namespace std;
 using namespace win32cpp;
-
-void test_file_mapping()
-{
-	auto file = unique_file_handle{ CreateFile(L"test", GENERIC_ALL, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, NULL) };
-	
-	shared_ptr<IFile> file_mapping = std::make_shared<FileImpl>();
-	auto mapping = unique_mapping_handle{ file_mapping->CreateFileMapping(file.get(), NULL, PAGE_READWRITE, 0, 4096, NULL) };
-	if (mapping)
-	{
-		auto view = unique_ptr<void, map_view_deleter>{ file_mapping->MapViewOfFile(mapping.get(), FILE_MAP_ALL_ACCESS, 0, 0, 4096), map_view_deleter{ file_mapping } };
-	}
-}
 
 void wmain()
 {
@@ -121,6 +110,4 @@ void wmain()
 			// ... do something with the locked resource
 		}
 	}
-
-	test_file_mapping();
 }

@@ -40,32 +40,32 @@ namespace win32cpp
 		return &tempPathBuffer[0];
 	}
 
-	//auto getThreadToken() -> unique_token_handle
-	//{
-	//	HANDLE threadToken;
+	auto getThreadToken() -> unique_token_handle
+	{
+		HANDLE threadToken;
 
-	//	if (OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken))
-	//	{
-	//		return unique_token_handle{ threadToken, false };
-	//	}
+		if (OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken))
+		{
+			return unique_token_handle{ threadToken, false };
+		}
 
-	//	// If the error is something other than ERROR_NO_TOKEN, then it's a real error and we should abort
-	//	auto error = GetLastError();
-	//	if (ERROR_NO_TOKEN != error)
-	//	{
-	//		CHECK_WIN32(error);
-	//	}
-	//	
-	//	CHECK_BOOL(ImpersonateSelf(SecurityImpersonation));
-	//	try
-	//	{
-	//		CHECK_BOOL(OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken));
-	//		return unique_token_handle{ threadToken, true };
-	//	}
-	//	catch (...)
-	//	{
-	//		RevertToSelf();
-	//		throw;
-	//	}
-	//}
+		// If the error is something other than ERROR_NO_TOKEN, then it's a real error and we should abort
+		auto error = GetLastError();
+		if (ERROR_NO_TOKEN != error)
+		{
+			CHECK_WIN32(error);
+		}
+		
+		CHECK_BOOL(ImpersonateSelf(SecurityImpersonation));
+		try
+		{
+			CHECK_BOOL(OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken));
+			return unique_token_handle{ threadToken, true };
+		}
+		catch (...)
+		{
+			RevertToSelf();
+			throw;
+		}
+	}
 }

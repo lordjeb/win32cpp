@@ -4,6 +4,7 @@
 #include <codecvt>
 #include <functional>
 #include <memory>
+#include <vector>
 
 // Windows
 #include "..\..\targetver.h"
