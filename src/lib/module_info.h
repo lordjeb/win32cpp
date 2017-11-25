@@ -9,5 +9,5 @@ namespace win32cpp
 	auto getTempPath()->std::wstring;
 	auto getWindowsPath()->std::wstring;
 	auto getSystemPath()->std::wstring;
-	auto getThreadToken()->unique_token_handle;
+	auto getThreadToken(DWORD DesiredAccess = TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY)->unique_token_handle;
 }

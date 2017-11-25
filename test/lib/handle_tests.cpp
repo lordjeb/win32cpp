@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "handle.h"
 #include "module_info.h"
-#include "string_extensions.h"
-
-using namespace win32cpp;
-using testing::Eq;
-using testing::Ne;
 
 struct basic_unique_handle_test : public ::testing::Test
 {

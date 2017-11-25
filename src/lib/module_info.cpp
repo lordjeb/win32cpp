@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "debug.h"
+#include "error.h"
 #include "module_info.h"
 
 using namespace std;
@@ -47,11 +48,11 @@ namespace win32cpp
 		return &tempPathBuffer[0];
 	}
 
-	auto getThreadToken() -> unique_token_handle
+	auto getThreadToken(DWORD DesiredAccess /*= TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY*/) -> unique_token_handle
 	{
 		HANDLE threadToken;
 
-		if (OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken))
+		if (OpenThreadToken(GetCurrentThread(), DesiredAccess, TRUE, &threadToken))
 		{
 			return unique_token_handle{ threadToken, false };
 		}
@@ -66,7 +67,7 @@ namespace win32cpp
 		CHECK_BOOL(ImpersonateSelf(SecurityImpersonation));
 		try
 		{
-			CHECK_BOOL(OpenThreadToken(GetCurrentThread(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, TRUE, &threadToken));
+			CHECK_BOOL(OpenThreadToken(GetCurrentThread(), DesiredAccess, TRUE, &threadToken));
 			return unique_token_handle{ threadToken, true };
 		}
 		catch (...)
