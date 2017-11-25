@@ -1,7 +1,6 @@
 #pragma once
 #include "debug.h"
 #include "error.h"
-#include "win32api_abstractions.h"
 #include <memory>
 #include <vector>
 #include <winhttp.h>
@@ -22,6 +21,11 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
+
+		static auto close(const pointer value) noexcept -> void
+		{
+			VERIFY(::CloseHandle(value));
+		}
 	};
 
 	struct invalid_handle_traits
@@ -31,6 +35,11 @@ namespace win32cpp
 		static auto invalid() noexcept -> pointer
 		{
 			return INVALID_HANDLE_VALUE;
+		}
+
+		static auto close(const pointer value) noexcept -> void
+		{
+			VERIFY(::CloseHandle(value));
 		}
 	};
 
@@ -42,6 +51,11 @@ namespace win32cpp
 		{
 			return INVALID_HANDLE_VALUE;
 		}
+
+		static auto close(const pointer value) noexcept -> void
+		{
+			VERIFY(::FindClose(value));
+		}
 	};
 
 	struct registry_handle_traits
@@ -51,6 +65,11 @@ namespace win32cpp
 		static auto invalid() noexcept -> pointer
 		{
 			return nullptr;
+		}
+
+		static auto close(const pointer value) noexcept -> void
+		{
+			VERIFY(::RegCloseKey(value));
 		}
 	};
 
@@ -62,6 +81,11 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
+
+		static auto close(const pointer value) noexcept -> void
+		{
+			VERIFY(::CloseServiceHandle(value));
+		}
 	};
 
 	struct http_handle_traits
@@ -72,25 +96,10 @@ namespace win32cpp
 		{
 			return nullptr;
 		}
-	};
 
-	template <typename Traits>
-	class handle_closer
-	{
-	private:
-		std::shared_ptr<IFile> m_pFile;
-
-	protected:
-		typedef typename Traits::pointer pointer;
-
-	public:
-		handle_closer(std::shared_ptr<IFile> pFile) : m_pFile{ pFile }
+		static auto close(const pointer value) noexcept -> void
 		{
-		}
-
-		auto operator()(pointer value) -> void
-		{
-			VERIFY(m_pFile->CloseHandle(value));
+			VERIFY(::CloseHandle(value));
 		}
 	};
 
@@ -98,16 +107,15 @@ namespace win32cpp
 	//	basic_unique_handle. Class template for a handle wrapper that allows only a single owner.
 	//
 
-	template <typename Traits, typename Closer>
+	template <typename Traits>
 	class basic_unique_handle
 	{
 	protected:
 		typedef typename Traits::pointer pointer;
-		typedef typename Closer closer;
 
 	public:
-		explicit basic_unique_handle(const closer& closer, pointer value = Traits::invalid()) noexcept
-			: m_value { value }, m_closer{ closer }
+		explicit basic_unique_handle(pointer value = Traits::invalid()) noexcept
+			: m_value { value }
 		{
 		}
 
@@ -150,11 +158,6 @@ namespace win32cpp
 			return &m_value;
 		}
 
-		auto get_closer() -> Closer
-		{
-			return m_closer;
-		}
-
 		auto release() noexcept -> pointer
 		{
 			auto value = m_value;
@@ -172,68 +175,67 @@ namespace win32cpp
 			return static_cast<bool>(*this);
 		}
 
-		auto swap(basic_unique_handle<Traits, Closer>& other) noexcept -> void
+		auto swap(basic_unique_handle<Traits>& other) noexcept -> void
 		{
 			std::swap(m_value, other.m_value);
 		}
 
 	private:
 		pointer m_value;
-		closer m_closer;
 
 		auto close() noexcept -> void
 		{
 			if (*this)
 			{
-				m_closer(m_value);
+				Traits::close(m_value);
 			}
 		}
 	};
 
-	template <typename Traits, typename Closer>
-	auto swap(basic_unique_handle<Traits, Closer>& left, basic_unique_handle<Traits, Closer>& right) noexcept -> void
+	template <typename Traits>
+	auto swap(basic_unique_handle<Traits>& left, basic_unique_handle<Traits>& right) noexcept -> void
 	{
 		left.swap(right);
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator==(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator==(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() == right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator!=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator!=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() != right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator>(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator>(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() > right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator>=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator>=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() >= right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator<(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator<(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() < right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto operator<=(const basic_unique_handle<Traits, Closer>& left, const basic_unique_handle<Traits, Closer>& right) noexcept -> bool
+	template <typename Traits>
+	auto operator<=(const basic_unique_handle<Traits>& left, const basic_unique_handle<Traits>& right) noexcept -> bool
 	{
 		return left.get() <= right.get();
 	}
 
-	template <typename Traits, typename Closer>
-	auto waitable_handles(const std::vector<basic_unique_handle<Traits, Closer>>& v) noexcept -> const std::vector<typename Traits::pointer>
+	template <typename Traits>
+	auto waitable_handles(const std::vector<basic_unique_handle<Traits>>& v) noexcept -> const std::vector<typename Traits::pointer>
 	{
 		std::vector<typename Traits::pointer> r;
 		for (auto& h : v)
@@ -247,21 +249,21 @@ namespace win32cpp
 	//	Typedef specializations.
 	//
 
-	typedef basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>> unique_handle;
-	typedef basic_unique_handle<null_handle_traits, handle_closer<invalid_handle_traits>> unique_mapping_handle;
-	typedef basic_unique_handle<invalid_handle_traits, handle_closer<invalid_handle_traits>> unique_file_handle;
-	typedef basic_unique_handle<find_handle_traits, handle_closer<find_handle_traits>> unique_find_handle;
-	typedef basic_unique_handle<registry_handle_traits, handle_closer<registry_handle_traits>> unique_registry_handle;
-	typedef basic_unique_handle<service_handle_traits, handle_closer<service_handle_traits>> unique_service_handle;
-	typedef basic_unique_handle<http_handle_traits, handle_closer<http_handle_traits>> unique_http_handle;
+	typedef basic_unique_handle<null_handle_traits> unique_handle;
+	typedef basic_unique_handle<null_handle_traits> unique_mapping_handle;
+	typedef basic_unique_handle<invalid_handle_traits> unique_file_handle;
+	typedef basic_unique_handle<find_handle_traits> unique_find_handle;
+	typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
+	typedef basic_unique_handle<service_handle_traits> unique_service_handle;
+	typedef basic_unique_handle<http_handle_traits> unique_http_handle;
 
-	class unique_token_handle : public basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>
+	class unique_token_handle : public basic_unique_handle<null_handle_traits>
 	{
 		bool m_impersonating;
 
 	public:
-		explicit unique_token_handle(const basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>::closer& closer, basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>::pointer value = null_handle_traits::invalid(), bool impersonating = false) noexcept
-			: basic_unique_handle<null_handle_traits, handle_closer<null_handle_traits>>(closer, value)
+		explicit unique_token_handle(basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(), bool impersonating = false) noexcept
+			: basic_unique_handle<null_handle_traits>(value)
 		{
 		}
 

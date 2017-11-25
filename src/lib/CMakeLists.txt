@@ -12,7 +12,6 @@ set(header_list
     ptr_setter.h
     service.h
     string_extensions.h
-    win32api_abstractions.h
     windows_constants.h
 )
 
@@ -23,7 +22,6 @@ set(source_list
     performance.cpp
     privilege_guard.cpp
     string_extensions.cpp
-    win32api_abstractions.cpp
 )
 
 ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)

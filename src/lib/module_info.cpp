@@ -19,6 +19,13 @@ namespace win32cpp
 		return moduleFilename.substr(0, moduleFilename.rfind(L'\\'));
 	}
 
+	auto getTempFilename(const wstring& path, const wstring& prefix, unsigned int unique /*= 0*/) -> wstring
+	{
+		vector<wchar_t> tempFilenameBuffer(MAX_PATH);
+		CHECK_COUNT(GetTempFileName(getTempPath().c_str(), prefix.c_str(), unique, &tempFilenameBuffer[0]));
+		return &tempFilenameBuffer[0];
+	}
+
 	auto getTempPath() -> wstring
 	{
 		vector<wchar_t> tempPathBuffer(MAX_PATH);
