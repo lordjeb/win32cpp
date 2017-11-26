@@ -12,22 +12,18 @@ namespace win32cpp
 	class service_base
 	{
 	public:
-		explicit service_base(const std::wstring& name) : m_name{ name }
-		{
-		}
-
-		virtual ~service_base()
-		{
-		}
-
 		virtual DWORD controlsAccepted()
 		{
 			return SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
 		}
 
-		std::wstring name() const
+		virtual std::wstring name() const = 0
 		{
-			return m_name;
+		}
+
+		virtual std::wstring displayName() const
+		{
+			return L"";
 		}
 
 		virtual void onContinue()
@@ -50,13 +46,8 @@ namespace win32cpp
 		{
 			return SERVICE_WIN32_OWN_PROCESS;
 		}
-
-	private:
-		const std::wstring m_name;
 	};
 
-
-	//
 	template <typename T>
 	class service_controller
 	{
@@ -120,21 +111,21 @@ namespace win32cpp
 
 			switch (dwControl)
 			{
-				case SERVICE_CONTROL_STOP:
-					pInstance->_stop();
-					break;
-				case SERVICE_CONTROL_PAUSE:
-					pInstance->_pause();
-					break;
-				case SERVICE_CONTROL_CONTINUE:
-					pInstance->_continue();
-					break;
-				case SERVICE_CONTROL_INTERROGATE:
-					//	Docs say we should return NO_ERROR even if we don't handle this
-					break;
-				default:
-					dr = ERROR_CALL_NOT_IMPLEMENTED;
-					break;
+			case SERVICE_CONTROL_STOP:
+				pInstance->_stop();
+				break;
+			case SERVICE_CONTROL_PAUSE:
+				pInstance->_pause();
+				break;
+			case SERVICE_CONTROL_CONTINUE:
+				pInstance->_continue();
+				break;
+			case SERVICE_CONTROL_INTERROGATE:
+				//	Docs say we should return NO_ERROR even if we don't handle this
+				break;
+			default:
+				dr = ERROR_CALL_NOT_IMPLEMENTED;
+				break;
 			}
 
 			return dr;
@@ -193,7 +184,39 @@ namespace win32cpp
 		}
 	};
 
-	//
+	template <typename T>
+	class service_installer
+	{
+	public:
+		static_assert(std::is_base_of<service_base, T>::value, "T must be a derived class of service_base");
+
+		auto install(const std::wstring& filename, const std::wstring& username = L"", const std::wstring& password = L"",
+			DWORD startType = SERVICE_DEMAND_START, DWORD errorControl = SERVICE_ERROR_NORMAL) -> void
+		{
+			auto scm = unique_service_handle{ OpenSCManagerW(nullptr, SERVICES_ACTIVE_DATABASEW, SC_MANAGER_CREATE_SERVICE) };
+			CHECK_BOOL(bool(scm));
+
+			auto service = unique_service_handle{ CreateServiceW(scm.get(), m_service_base.name().c_str(),
+				m_service_base.displayName().c_str(), SERVICE_ALL_ACCESS, m_service_base.serviceType(), startType,
+				errorControl, filename.c_str(), nullptr, nullptr, nullptr, username.empty() ? nullptr : username.c_str(),
+				password.c_str()) };
+			CHECK_BOOL(bool(scm));
+		}
+
+		auto uninstall() -> void
+		{
+			auto scm = unique_service_handle{ OpenSCManagerW(nullptr, SERVICES_ACTIVE_DATABASEW, SC_MANAGER_CREATE_SERVICE) };
+			CHECK_BOOL(bool(scm));
+
+			auto service = unique_service_handle{ OpenServiceW(scm.get(), m_service_base.name().c_str(), DELETE) };
+			CHECK_BOOL(bool(service));
+			CHECK_BOOL(DeleteService(service.get()));
+		}
+
+	private:
+		T m_service_base;
+	};
+
 	class service_registration
 	{
 	public:

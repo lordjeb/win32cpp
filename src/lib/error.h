@@ -19,7 +19,14 @@ namespace win32cpp
 		{
 		}
 
+		check_failed(long result, const std::wstring& file, int line)
+			: error(result), file{ file }, line{ line }
+		{
+		}
+
 		long error;
+		std::wstring file;
+		int line;
 	};
 
 	inline void checkBool(BOOL br)
@@ -36,7 +43,7 @@ namespace win32cpp
 		{
 			auto gle = GetLastError();
 			outputDebugStringEx(L"%s(%d): BOOL result failure (%d)\n", file, line, gle);
-			throw check_failed(gle);
+			throw check_failed(gle, file, line);
 		}
 	}
 
@@ -54,7 +61,7 @@ namespace win32cpp
 		{
 			auto gle = GetLastError();
 			outputDebugStringEx(L"%s(%d): bool result failure (%d)\n", file, line, gle);
-			throw check_failed(gle);
+			throw check_failed(gle, file, line);
 		}
 	}
 
@@ -72,7 +79,7 @@ namespace win32cpp
 		{
 			auto gle = GetLastError();
 			outputDebugStringEx(L"%s(%d): count result failure (%d)\n", file, line, gle);
-			throw check_failed(gle);
+			throw check_failed(gle, file, line);
 		}
 	}
 
@@ -89,7 +96,7 @@ namespace win32cpp
 		if (S_OK != hr)
 		{
 			outputDebugStringEx(L"%s(%d): HRESULT result failure (0x%08x)\n", file, line, hr);
-			throw check_failed(hr);
+			throw check_failed(hr, file, line);
 		}
 	}
 
@@ -106,7 +113,7 @@ namespace win32cpp
 		if (ERROR_SUCCESS != dwr)
 		{
 			outputDebugStringEx(L"%s(%d): WIN32 result failure (0x%08x)\n", file, line, dwr);
-			throw check_failed(dwr);
+			throw check_failed(dwr, file, line);
 		}
 	}
 
@@ -125,7 +132,7 @@ namespace win32cpp
 		if (expected != actual)
 		{
 			outputDebugStringEx(L"%s(%d): check failure\n", file, line);
-			throw check_failed(0);
+			throw check_failed(0, file, line);
 		}
 	}
 

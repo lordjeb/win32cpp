@@ -1,10 +1,4 @@
-#include "..\..\targetver.h"
-//#include <debug.h>
-//#include <error.h>
-//#include <module_info.h>
-//#include <string_extensions.h>
-#include <iostream>
-#include <service.h>
+#include "pch.h"
 
 using namespace std;
 using namespace win32cpp;
@@ -12,8 +6,9 @@ using namespace win32cpp;
 class testsvc : public service_base
 {
 public:
-	testsvc() : service_base(L"TestSvc")
+	std::wstring name() const override
 	{
+		return L"TestSvc";
 	}
 
 	void onContinue() override
@@ -40,8 +35,9 @@ public:
 class testsvc2 : public service_base
 {
 public:
-	testsvc2() : service_base(L"TestSvc2")
+	std::wstring name() const override
 	{
+		return L"TestSvc2";
 	}
 
 	void onContinue() override
@@ -67,24 +63,41 @@ public:
 
 void wmain(int argc, const wchar_t* argv[])
 {
-	if (wcscmp(argv[1], L"--console"))
+	try
 	{
-		wcout << L"Not implemented." << endl;
-	}
-	else if (wcscmp(argv[1], L"--install"))
-	{
-		wcout << L"Not implemented." << endl;
-	}
-	else if (wcscmp(argv[1], L"--uninstall"))
-	{
-		wcout << L"Not implemented." << endl;
-	}
-	else
-	{
-		service_registration serviceRegistration;
-		serviceRegistration.add(service_controller<testsvc>{});
-		serviceRegistration.add(service_controller<testsvc2>{});
+		if (!wcscmp(argv[1], L"--console"))
+		{
+			wcout << L"Not implemented." << endl;
+		}
+		else if (!wcscmp(argv[1], L"--install"))
+		{
+			auto moduleFilename = getModuleFilename();
 
-		serviceRegistration.startDispatcher();
+			auto serviceInstaller = service_installer<testsvc>{};
+			serviceInstaller.install(moduleFilename);
+
+			auto serviceInstaller2 = service_installer<testsvc2>{};
+			serviceInstaller2.install(moduleFilename);
+		}
+		else if (!wcscmp(argv[1], L"--uninstall"))
+		{
+			auto serviceInstaller = service_installer<testsvc>{};
+			serviceInstaller.uninstall();
+
+			auto serviceInstaller2 = service_installer<testsvc2>{};
+			serviceInstaller2.uninstall();
+		}
+		else
+		{
+			auto serviceRegistration = service_registration{};
+			serviceRegistration.add(service_controller<testsvc>{});
+			serviceRegistration.add(service_controller<testsvc2>{});
+
+			serviceRegistration.startDispatcher();
+		}
+	}
+	catch (const check_failed& e)
+	{
+		wcout << L"ERROR (" << e.file << ";" << e.line << "): " << getErrorMessage(e.error) << endl;
 	}
 }
