@@ -18,7 +18,9 @@ namespace win32cpp
 		// Move
 		privilege_guard(privilege_guard&& src);
 		auto operator=(privilege_guard&& src) -> privilege_guard&;
-		
+
+		auto enabled() const -> bool;
+
 	private:
 		HANDLE m_tokenHandle;
 		std::wstring m_privilege;

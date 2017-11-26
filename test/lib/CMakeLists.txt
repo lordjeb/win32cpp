@@ -4,6 +4,7 @@ set(source_list
 	memory_tests.cpp
 	module_info_tests.cpp
 	performance_tests.cpp
+	privilege_guard_tests.cpp
 	string_extensions_tests.cpp
 )
 

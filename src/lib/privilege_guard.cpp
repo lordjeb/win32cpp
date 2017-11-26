@@ -48,6 +48,11 @@ namespace win32cpp
 		return *this;
 	}
 
+	auto privilege_guard::enabled() const -> bool
+	{
+		return m_enabled;
+	}
+
 	// Returns true if the privilege was enabled
 	auto privilege_guard::enablePrivilege(HANDLE tokenHandle, const std::wstring& privilege, bool enable) -> bool
 	{
