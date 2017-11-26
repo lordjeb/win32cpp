@@ -12,5 +12,4 @@ namespace win32cpp
 	//	} );
 	//
 	auto measureElapsedTime( std::function<void()> fn ) -> double;
-
 }

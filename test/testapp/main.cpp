@@ -30,10 +30,6 @@ void wmain()
 
 	outputDebugStringEx(L"This is a test\n");
 
-	// performance.h
-	//
-	wcout << measureElapsedTime([]() {Sleep(10); }) << endl;
-
 	// privilege_guard.h
 	//
 	auto threadToken = getThreadToken();

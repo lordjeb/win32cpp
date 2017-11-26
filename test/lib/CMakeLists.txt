@@ -3,6 +3,7 @@ set(source_list
 	handle_tests.cpp
 	memory_tests.cpp
 	module_info_tests.cpp
+	performance_tests.cpp
 	string_extensions_tests.cpp
 )
 
