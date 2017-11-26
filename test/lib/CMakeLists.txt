@@ -1,4 +1,5 @@
 set(source_list
+	debug_tests.cpp
 	error_tests.cpp
 	handle_tests.cpp
 	lock_guard_tests.cpp
