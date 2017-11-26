@@ -46,6 +46,11 @@ namespace win32cpp
 		{
 		}
 
+		virtual DWORD serviceType() const
+		{
+			return SERVICE_WIN32_OWN_PROCESS;
+		}
+
 	private:
 		const std::wstring m_name;
 	};
@@ -62,7 +67,7 @@ namespace win32cpp
 			: m_ssh{ nullptr }
 		{
 			memset(&m_ss, 0, sizeof(m_ss));
-			m_ss.dwServiceType = SERVICE_WIN32_SHARE_PROCESS; // TODO: Get this from the T??
+			m_ss.dwServiceType = m_service_base.serviceType();
 			m_ss.dwControlsAccepted = m_service_base.controlsAccepted();
 		}
 
