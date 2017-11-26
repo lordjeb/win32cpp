@@ -69,7 +69,13 @@ namespace win32cpp
 
 		static auto close(const pointer value) noexcept -> void
 		{
-			VERIFY(::RegCloseKey(value));
+			//	For usermode code, rather than list the explicit predefined keys, we will say that
+			//	anything with the most significant bit set should not be closed. That is what kernel
+			//	handles look like, so we should be okay as long as dealing with registry keys.
+			if (value < HKEY_CLASSES_ROOT)
+			{
+				VERIFY(ERROR_SUCCESS == ::RegCloseKey(value));
+			}
 		}
 	};
 

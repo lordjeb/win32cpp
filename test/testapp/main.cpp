@@ -41,11 +41,6 @@ void wmain()
 	auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
 	wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
 
-	// handle.h
-	//
-	WIN32_FIND_DATA find_data;
-	auto find_handle = unique_find_handle{ FindFirstFile(LR"(C:\*)", &find_data) };
-
 	// lock_guard.h
 	//
 	{
