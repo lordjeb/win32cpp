@@ -8,8 +8,7 @@ set(header_list
 	pch.h
     performance.h
     privilege_guard.h
-    ptr_deleter.h
-    ptr_setter.h
+    memory.h
     service.h
     string_extensions.h
     windows_constants.h

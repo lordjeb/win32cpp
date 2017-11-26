@@ -1,6 +1,7 @@
 set(source_list
 	error_tests.cpp
 	handle_tests.cpp
+	memory_tests.cpp
 	module_info_tests.cpp
 	string_extensions_tests.cpp
 )

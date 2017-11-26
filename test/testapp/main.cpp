@@ -9,8 +9,7 @@
 #include <string_extensions.h>
 #include <performance.h>
 #include <privilege_guard.h>
-#include <ptr_deleter.h>
-#include <ptr_setter.h>
+#include <memory.h>
 #include <windows_constants.h>
 #include <lock_guard.h>
 #include <map_view_deleter.h>
@@ -31,12 +30,6 @@ void wmain()
 
 	outputDebugStringEx(L"This is a test\n");
 
-	// module_info.h
-	//
-	wcout << getModulePath() << endl;
-	wcout << getModuleFilename() << endl;
-	wcout << getTempPath() << endl;
-
 	// performance.h
 	//
 	wcout << measureElapsedTime([]() {Sleep(10); }) << endl;
@@ -47,32 +40,6 @@ void wmain()
 	auto shutdown_privilege = privilege_guard{ threadToken.get(), L"SeShutdownPrivilege" }; // Disabled by default
 	auto change_notify_privilege = privilege_guard{ threadToken.get(), L"SeChangeNotifyPrivilege" }; // Enabled by default
 	wcout << L"Acquired Shutdown and ChangeNotify privileges" << endl;
-
-	// ptr_deleter.h
-	//
-	wcout << L"Calling memory allocation routines" << endl;
-	auto hptr = heap_ptr{ HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };
-	auto lptr = local_ptr{ LocalAlloc(LPTR, 256) };
-	auto gptr = global_ptr{ GlobalAlloc(GPTR, 256) };
-
-	auto pSid = PSID{};
-	auto sidIdentifierAuthority = SID_IDENTIFIER_AUTHORITY{ SECURITY_NT_AUTHORITY };
-	CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &pSid));
-	auto sid = sid_ptr{ pSid };
-
-	auto pStringSid = LPTSTR{};
-	CHECK_BOOL(ConvertSidToStringSid(sid.get(), &pStringSid));
-	auto stringSid = local_ptr{ pStringSid };
-	wcout << L"Sid: " << (LPTSTR)stringSid.get() << endl;
-
-	// ptr_setter.h
-	//
-	auto sid2 = sid_ptr{};
-	CHECK_BOOL(AllocateAndInitializeSid(&sidIdentifierAuthority, 1, DOMAIN_USER_RID_ADMIN, 0, 0, 0, 0, 0, 0, 0, &ptr_setter(sid2)));
-
-	auto stringSid2 = local_ptr{};
-	CHECK_BOOL(ConvertSidToStringSid(sid2.get(), (LPTSTR*)&ptr_setter(stringSid2)));
-	wcout << L"Sid: " << (LPTSTR)stringSid2.get() << endl;
 
 	// handle.h
 	//

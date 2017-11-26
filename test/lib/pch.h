@@ -6,13 +6,13 @@
 // Googletest
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+using namespace testing;
 
 // Windows
 #include "..\..\targetver.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-namespace win32cpp {}
+// win32cpp
+#include "error.h"
 using namespace win32cpp;
-using testing::Eq;
-using testing::Ne;
