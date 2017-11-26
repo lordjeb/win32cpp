@@ -29,36 +29,4 @@ void wmain()
 	RELTRACE(L"%s\n", L"Tracing macros can be used with format specifier strings");
 
 	outputDebugStringEx(L"This is a test\n");
-
-	// lock_guard.h
-	//
-	{
-		auto mutex = unique_handle{ CreateMutex(NoSecurityAttributes, NotInitiallyOwned, L"MutexName") };
-		CHECK_BOOL(bool(mutex));
-		{
-			auto mutex_guard = mutex_lock_guard{ mutex.get() };
-
-			// ... do something with the locked resource
-		}
-
-		// If the mutex is created as initially owned then mutex_lock_guard can be initialized to skip the locking
-		auto mutex_reference = unique_handle{ CreateMutex(NoSecurityAttributes, InitiallyOwned, L"MutexName") };
-		auto createMutexResult = GetLastError();
-		CHECK_BOOL(bool(mutex_reference));
-		{
-			auto mutex_guard = mutex_lock_guard{ mutex_reference.get(), INFINITE, ERROR_ALREADY_EXISTS != createMutexResult };
-
-			// ... do something with the locked resource
-		}
-	}
-
-	{
-		auto semaphore = unique_handle{ CreateSemaphore(NoSecurityAttributes, 1, 1, Unnamed) };
-		CHECK_BOOL(bool(semaphore));
-		{
-			auto semaphore_guard = semaphore_lock_guard{ semaphore.get() };
-
-			// ... do something with the locked resource
-		}
-	}
 }
