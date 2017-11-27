@@ -152,7 +152,7 @@ void wmain(int argc, const wchar_t* argv[])
 		std::wstringstream ss;
 		ss << L"ERROR (" << e.file << ";" << e.line << "): " << getErrorMessage(e.error);
 
-		TRACE(L"%s\n", ss.str());
+		TRACE(L"%s\n", ss.str().c_str());
 
 		if (console_mode)
 		{
@@ -163,7 +163,7 @@ void wmain(int argc, const wchar_t* argv[])
 	{
 		auto what = str2wstr(e.what());
 
-		TRACE(L"%S\n", what);
+		TRACE(L"%S\n", what.c_str());
 
 		if (console_mode)
 		{
