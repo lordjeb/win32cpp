@@ -67,7 +67,12 @@ void wmain(int argc, const wchar_t* argv[])
 	{
 		if (!wcscmp(argv[1], L"--console"))
 		{
-			wcout << L"Not implemented." << endl;
+			wcout << L"Running service from console. Press Ctrl+C to stop." << endl;
+
+			auto controller = console_service_controller::instance();
+			controller->add(make_shared<testsvc>());
+			controller->add(make_shared<testsvc2>());
+			controller->run();
 		}
 		else if (!wcscmp(argv[1], L"--install"))
 		{

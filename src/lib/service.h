@@ -183,6 +183,23 @@ namespace win32cpp
 			CHECK_BOOL(SetServiceStatus(m_ssh, &m_ss));
 		}
 	};
+	
+	class console_service_controller
+	{
+	public:
+		static console_service_controller* instance();
+		static BOOL CtrlHandler(DWORD controlType);
+		void add(std::shared_ptr<service_base> p);
+		void run();
+		void stop();
+
+	private:
+		static console_service_controller* m_instance;
+		std::vector<std::shared_ptr<service_base>> m;
+		unique_handle m_serviceStopEvent;
+
+		console_service_controller();
+	};
 
 	template <typename T>
 	class service_installer
@@ -227,17 +244,7 @@ namespace win32cpp
 			m_serviceMains.push_back(controller.serviceMain);
 		}
 
-		void startDispatcher()
-		{
-			//	Build a SERVICE_TABLE_ENTRY array and call StartServiceCtrlDispatcher to tell SCM to call our ServiceMain function (controler::service_main)
-			std::vector<SERVICE_TABLE_ENTRY> service_table;
-			for (size_t i = 0; i < m_serviceNames.size(); ++i)
-			{
-				service_table.push_back(SERVICE_TABLE_ENTRY{ const_cast<LPWSTR>(m_serviceNames[i].c_str()), m_serviceMains[i] });
-			}
-			service_table.push_back(SERVICE_TABLE_ENTRY{ nullptr, nullptr });
-			CHECK_BOOL(StartServiceCtrlDispatcherW(&service_table[0]));
-		}
+		void startDispatcher();
 
 	private:
 		std::vector<std::wstring> m_serviceNames;

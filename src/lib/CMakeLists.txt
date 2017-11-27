@@ -20,6 +20,7 @@ set(source_list
     module_info.cpp
     performance.cpp
     privilege_guard.cpp
+	service.cpp
     string_extensions.cpp
 )
 
