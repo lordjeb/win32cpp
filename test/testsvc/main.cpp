@@ -1,4 +1,7 @@
 #include "pch.h"
+#include <strstream>
+#include <service.h>
+#include <string_extensions.h>
 
 using namespace std;
 using namespace win32cpp;
@@ -6,94 +9,137 @@ using namespace win32cpp;
 class testsvc : public service_base
 {
 public:
-	std::wstring name() const override
+	virtual DWORD controlsAccepted() const override
+	{
+		return SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
+	}
+
+	virtual std::wstring name() const override
 	{
 		return L"TestSvc";
 	}
 
-	void onContinue() override
+	virtual std::wstring displayName() const override
+	{
+		return L"";
+	}
+
+	virtual void onContinue() override
 	{
 		TRACE(L"TestSvc::onContinue\n");
 	}
 
-	void onInitialize() override
+	virtual void onInitialize() override
 	{
 		TRACE(L"TestSvc::onInitialize\n");
 	}
 
-	void onPause() override
+	virtual void onPause() override
 	{
 		TRACE(L"TestSvc::onPause\n");
 	}
 
-	void onStop() override
+	virtual void onStop() override
 	{
 		TRACE(L"TestSvc::onStop\n");
+	}
+
+	virtual DWORD serviceType() const override
+	{
+		return SERVICE_WIN32_SHARE_PROCESS;
 	}
 };
 
 class testsvc2 : public service_base
 {
 public:
-	std::wstring name() const override
+	virtual DWORD controlsAccepted() const override
+	{
+		return SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
+	}
+
+	virtual std::wstring name() const override
 	{
 		return L"TestSvc2";
 	}
 
-	void onContinue() override
+	virtual std::wstring displayName() const override
+	{
+		return L"";
+	}
+
+	virtual void onContinue() override
 	{
 		TRACE(L"TestSvc2::onContinue\n");
 	}
 
-	void onInitialize() override
+	virtual void onInitialize() override
 	{
 		TRACE(L"TestSvc2::onInitialize\n");
 	}
 
-	void onPause() override
+	virtual void onPause() override
 	{
 		TRACE(L"TestSvc2::onPause\n");
 	}
 
-	void onStop() override
+	virtual void onStop() override
 	{
 		TRACE(L"TestSvc2::onStop\n");
+	}
+
+	virtual DWORD serviceType() const override
+	{
+		return SERVICE_WIN32_SHARE_PROCESS;
 	}
 };
 
 void wmain(int argc, const wchar_t* argv[])
 {
+	bool console_mode = true;
+
+	TRACE(L"+ testsvc::wmain\n");
+
 	try
 	{
-		if (!wcscmp(argv[1], L"--console"))
+		if (argc > 1)
 		{
-			wcout << L"Running service from console. Press Ctrl+C to stop." << endl;
+			if (!wcscmp(argv[1], L"--console"))
+			{
+				wcout << L"Running service from console. Press Ctrl+C to stop." << endl;
 
-			auto controller = console_service_controller::instance();
-			controller->add(make_shared<testsvc>());
-			controller->add(make_shared<testsvc2>());
-			controller->run();
-		}
-		else if (!wcscmp(argv[1], L"--install"))
-		{
-			auto moduleFilename = getModuleFilename();
+				auto controller = console_service_controller::instance();
+				controller->add(make_shared<testsvc>());
+				controller->add(make_shared<testsvc2>());
+				controller->run();
+			}
+			else if (!wcscmp(argv[1], L"--install"))
+			{
+				auto moduleFilename = getModuleFilename();
 
-			auto serviceInstaller = service_installer<testsvc>{};
-			serviceInstaller.install(moduleFilename);
+				auto serviceInstaller = service_installer<testsvc>{};
+				serviceInstaller.install(moduleFilename);
 
-			auto serviceInstaller2 = service_installer<testsvc2>{};
-			serviceInstaller2.install(moduleFilename);
-		}
-		else if (!wcscmp(argv[1], L"--uninstall"))
-		{
-			auto serviceInstaller = service_installer<testsvc>{};
-			serviceInstaller.uninstall();
+				auto serviceInstaller2 = service_installer<testsvc2>{};
+				serviceInstaller2.install(moduleFilename);
 
-			auto serviceInstaller2 = service_installer<testsvc2>{};
-			serviceInstaller2.uninstall();
+				wcout << L"Installed." << endl;
+			}
+			else if (!wcscmp(argv[1], L"--uninstall"))
+			{
+				auto serviceInstaller = service_installer<testsvc>{};
+				serviceInstaller.uninstall();
+
+				auto serviceInstaller2 = service_installer<testsvc2>{};
+				serviceInstaller2.uninstall();
+
+				wcout << L"Uninstalled." << endl;
+			}
 		}
 		else
 		{
+			console_mode = false;
+
 			auto serviceRegistration = service_registration{};
 			serviceRegistration.add(service_controller<testsvc>{});
 			serviceRegistration.add(service_controller<testsvc2>{});
@@ -103,6 +149,38 @@ void wmain(int argc, const wchar_t* argv[])
 	}
 	catch (const check_failed& e)
 	{
-		wcout << L"ERROR (" << e.file << ";" << e.line << "): " << getErrorMessage(e.error) << endl;
+		std::wstringstream ss;
+		ss << L"ERROR (" << e.file << ";" << e.line << "): " << getErrorMessage(e.error);
+
+		TRACE(L"%s\n", ss.str());
+
+		if (console_mode)
+		{
+			wcout << ss.str() << endl;
+		}
 	}
+	catch (const exception& e)
+	{
+		auto what = str2wstr(e.what());
+
+		TRACE(L"%S\n", what);
+
+		if (console_mode)
+		{
+			wcout << what << endl;
+		}
+	}
+	catch (...)
+	{
+		auto what = L"Unhandled and unknown exception";
+
+		TRACE(L"%S\n", what);
+
+		if (console_mode)
+		{
+			wcout << what << endl;
+		}
+	}
+
+	TRACE(L"- testsvc::wmain\n");
 }

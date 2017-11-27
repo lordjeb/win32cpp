@@ -3,6 +3,9 @@
 
 // Standard C++ Library
 #include <iostream>
+#include <memory>
+#include <sstream>
+#include <vector>
 
 // Windows
 #include "..\..\targetver.h"
@@ -14,3 +17,4 @@
 #include <error.h>
 #include <module_info.h>
 #include <service.h>
+#include <string_extensions.h>

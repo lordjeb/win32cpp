@@ -9,43 +9,16 @@
 namespace win32cpp
 {
 	//	Defines the interface that a service should implement
-	class service_base
+	struct service_base
 	{
-	public:
-		virtual DWORD controlsAccepted()
-		{
-			return SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
-		}
-
-		virtual std::wstring name() const = 0
-		{
-		}
-
-		virtual std::wstring displayName() const
-		{
-			return L"";
-		}
-
-		virtual void onContinue()
-		{
-		}
-
-		virtual void onInitialize()
-		{
-		}
-
-		virtual void onPause()
-		{
-		}
-
-		virtual void onStop()
-		{
-		}
-
-		virtual DWORD serviceType() const
-		{
-			return SERVICE_WIN32_OWN_PROCESS;
-		}
+		virtual DWORD controlsAccepted() const = 0;
+		virtual std::wstring name() const = 0;
+		virtual std::wstring displayName() const = 0;
+		virtual void onContinue() = 0;
+		virtual void onInitialize() = 0;
+		virtual void onPause() = 0;
+		virtual void onStop() = 0;
+		virtual DWORD serviceType() const = 0;
 	};
 
 	template <typename T>
@@ -211,22 +184,22 @@ namespace win32cpp
 			DWORD startType = SERVICE_DEMAND_START, DWORD errorControl = SERVICE_ERROR_NORMAL) -> void
 		{
 			auto scm = unique_service_handle{ OpenSCManagerW(nullptr, SERVICES_ACTIVE_DATABASEW, SC_MANAGER_CREATE_SERVICE) };
-			CHECK_BOOL(bool(scm));
+			CHECK_BOOL(static_cast<bool>(scm));
 
 			auto service = unique_service_handle{ CreateServiceW(scm.get(), m_service_base.name().c_str(),
 				m_service_base.displayName().c_str(), SERVICE_ALL_ACCESS, m_service_base.serviceType(), startType,
 				errorControl, filename.c_str(), nullptr, nullptr, nullptr, username.empty() ? nullptr : username.c_str(),
 				password.c_str()) };
-			CHECK_BOOL(bool(scm));
+			CHECK_BOOL(static_cast<bool>(scm));
 		}
 
 		auto uninstall() -> void
 		{
 			auto scm = unique_service_handle{ OpenSCManagerW(nullptr, SERVICES_ACTIVE_DATABASEW, SC_MANAGER_CREATE_SERVICE) };
-			CHECK_BOOL(bool(scm));
+			CHECK_BOOL(static_cast<bool>(scm));
 
 			auto service = unique_service_handle{ OpenServiceW(scm.get(), m_service_base.name().c_str(), DELETE) };
-			CHECK_BOOL(bool(service));
+			CHECK_BOOL(static_cast<bool>(service));
 			CHECK_BOOL(DeleteService(service.get()));
 		}
 
