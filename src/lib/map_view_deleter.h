@@ -4,12 +4,12 @@
 
 namespace win32cpp
 {
-	class map_view_deleter
-	{
-	public:
-		auto operator()(void* value) const throw( ) -> void
-		{
-			VERIFY( ::UnmapViewOfFile( value ) );
-		}
-	};
+    class map_view_deleter
+    {
+    public:
+        auto operator()(void* value) const throw() -> void
+        {
+            VERIFY(::UnmapViewOfFile(value));
+        }
+    };
 }
