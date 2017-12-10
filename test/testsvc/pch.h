@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Standard C++ Library
 #include <iostream>
 #include <memory>

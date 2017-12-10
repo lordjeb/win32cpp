@@ -6,46 +6,46 @@ using ::testing::Gt;
 
 TEST(module_info_test, getModuleFilename)
 {
-	ASSERT_THAT(getModuleFilename(), EndsWith(L"lib_tests.exe"));
+    ASSERT_THAT(getModuleFilename(), EndsWith(L"lib_tests.exe"));
 }
 
 TEST(module_info_test, getModulePath)
 {
-	ASSERT_THAT(getModulePath().size(), Gt(0));
+    ASSERT_THAT(getModulePath().size(), Gt(0));
 }
 
 TEST(module_info_test, getTempPath)
 {
-	ASSERT_THAT(getTempPath().size(), Gt(0));
+    ASSERT_THAT(getTempPath().size(), Gt(0));
 }
 
 TEST(module_info_test, getTempFilename)
 {
-	auto temp_file = getTempFilename(getTempPath(), L"pre");
-	ASSERT_THAT(temp_file.size(), Gt(0));
-	ASSERT_TRUE(::DeleteFile(temp_file.c_str()));
+    auto temp_file = getTempFilename(getTempPath(), L"pre");
+    ASSERT_THAT(temp_file.size(), Gt(0));
+    ASSERT_TRUE(::DeleteFile(temp_file.c_str()));
 }
 
 TEST(module_info_test, getWindowsPath)
 {
-	ASSERT_THAT(getWindowsPath().size(), Gt(0));
+    ASSERT_THAT(getWindowsPath().size(), Gt(0));
 }
 
 TEST(module_info_test, getSystemPath)
 {
-	ASSERT_THAT(getSystemPath().size(), Gt(0));
+    ASSERT_THAT(getSystemPath().size(), Gt(0));
 }
 
 auto isThreadImpersonating() -> bool
 {
-	auto th = unique_token_handle{};
-	return ::OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, th.get_address_of());
+    auto th = unique_token_handle{};
+    return ::OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, th.get_address_of());
 }
 
 TEST(module_info_test, getThreadToken)
 {
-	ASSERT_FALSE(isThreadImpersonating());
-	auto token = getThreadToken();
-	ASSERT_THAT(token.get(), ::testing::NotNull());
-	ASSERT_TRUE(isThreadImpersonating());
+    ASSERT_FALSE(isThreadImpersonating());
+    auto token = getThreadToken();
+    ASSERT_THAT(token.get(), ::testing::NotNull());
+    ASSERT_TRUE(isThreadImpersonating());
 }
