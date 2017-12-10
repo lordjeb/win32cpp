@@ -13,6 +13,8 @@ endif()
 
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)
+add_definitions(-W4)
+add_definitions(-WX)
 
 #Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
