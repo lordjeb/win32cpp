@@ -32,7 +32,7 @@ void win32cpp::console_service_controller::add(std::shared_ptr<service_base> p)
     m.push_back(p);
 }
 
-void win32cpp::console_service_controller::run()
+void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[])
 {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
     m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
@@ -40,7 +40,7 @@ void win32cpp::console_service_controller::run()
 
     for (auto p : m)
     {
-        p->onInitialize();
+        p->onInitialize(argc, argv);
     }
 
     WaitForSingleObject(m_serviceStopEvent.get(), INFINITE);

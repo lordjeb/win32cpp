@@ -29,8 +29,10 @@ public:
         TRACE(L"TestSvc::onContinue\n");
     }
 
-    virtual void onInitialize() override
+    virtual void onInitialize(unsigned int argc, wchar_t* argv[]) override
     {
+        UNREFERENCED_PARAMETER(argc);
+        UNREFERENCED_PARAMETER(argv);
         TRACE(L"TestSvc::onInitialize\n");
     }
 
@@ -73,8 +75,10 @@ public:
         TRACE(L"TestSvc2::onContinue\n");
     }
 
-    virtual void onInitialize() override
+    virtual void onInitialize(unsigned int argc, wchar_t* argv[]) override
     {
+        UNREFERENCED_PARAMETER(argc);
+        UNREFERENCED_PARAMETER(argv);
         TRACE(L"TestSvc2::onInitialize\n");
     }
 
@@ -94,7 +98,7 @@ public:
     }
 };
 
-void wmain(int argc, const wchar_t* argv[])
+void wmain(int argc, wchar_t* argv[])
 {
     bool console_mode = true;
 
@@ -111,7 +115,7 @@ void wmain(int argc, const wchar_t* argv[])
                 auto controller = console_service_controller::instance();
                 controller->add(make_shared<testsvc>());
                 controller->add(make_shared<testsvc2>());
-                controller->run();
+                controller->run(argc, argv);
             }
             else if (!wcscmp(argv[1], L"--install"))
             {

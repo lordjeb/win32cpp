@@ -271,7 +271,7 @@ namespace win32cpp
         explicit unique_token_handle(
             basic_unique_handle<null_handle_traits>::pointer value = null_handle_traits::invalid(),
             bool impersonating = false) noexcept
-            : basic_unique_handle<null_handle_traits>(value)
+            : basic_unique_handle<null_handle_traits>(value), m_impersonating{ impersonating }
         {
         }
 

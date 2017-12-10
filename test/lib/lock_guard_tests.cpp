@@ -22,7 +22,7 @@ TEST(lock_guard_test, mutex_can_be_created_locked)
     auto mutex_ref = unique_handle{ ::CreateMutex(NoSecurityAttributes, InitiallyOwned, L"MutexName") };
     auto createMutexResult = GetLastError();
     ASSERT_TRUE(mutex_ref);
-    ASSERT_THAT(createMutexResult, Eq(ERROR_ALREADY_EXISTS));
+    ASSERT_THAT(createMutexResult, Eq(DWORD{ ERROR_ALREADY_EXISTS }));
     {
         auto mutex_guard = mutex_lock_guard{ mutex_ref.get(), INFINITE, ERROR_ALREADY_EXISTS != createMutexResult };
 

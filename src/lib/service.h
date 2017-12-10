@@ -14,7 +14,7 @@ namespace win32cpp
         virtual std::wstring name() const = 0;
         virtual std::wstring displayName() const = 0;
         virtual void onContinue() = 0;
-        virtual void onInitialize() = 0;
+        virtual void onInitialize(unsigned int argc, wchar_t* argv[]) = 0;
         virtual void onPause() = 0;
         virtual void onStop() = 0;
         virtual DWORD serviceType() const = 0;
@@ -36,7 +36,7 @@ namespace win32cpp
         service_controller(const service_controller& src) = delete;
         service_controller& operator=(const service_controller& src) = delete;
 
-        void main(__in unsigned int argc, __in wchar_t* argv[])
+        void main(unsigned int argc, wchar_t* argv[])
         {
             try
             {
@@ -51,7 +51,7 @@ namespace win32cpp
                 m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
                 CHECK_BOOL(static_cast<bool>(m_serviceStopEvent));
 
-                m_service_base.onInitialize();
+                m_service_base.onInitialize(argc, argv);
 
                 m_ss.dwCurrentState = SERVICE_RUNNING;
                 m_ss.dwCheckPoint = 0;
@@ -75,8 +75,7 @@ namespace win32cpp
             return m_service_base.name();
         }
 
-        static DWORD WINAPI serviceControlHandler(__in DWORD dwControl, __in DWORD dwEventType, __in LPVOID lpEventData,
-                                                  __in LPVOID lpContext)
+        static DWORD WINAPI serviceControlHandler(__in DWORD dwControl, __in DWORD, __in LPVOID, __in LPVOID lpContext)
         {
             service_controller<T>* pInstance = reinterpret_cast<service_controller<T>*>(lpContext);
             DWORD dr = NO_ERROR;
@@ -162,7 +161,7 @@ namespace win32cpp
         static console_service_controller* instance();
         static BOOL CtrlHandler(DWORD controlType);
         void add(std::shared_ptr<service_base> p);
-        void run();
+        void run(unsigned int argc, wchar_t* argv[]);
         void stop();
 
     private:
