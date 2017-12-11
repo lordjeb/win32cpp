@@ -3,11 +3,11 @@
 #include <string>
 #include <Windows.h>
 
-#define CHECK_BOOL(br) win32cpp::checkBool((br), __WFILE__, __LINE__)
-#define CHECK_COUNT(cnt) win32cpp::checkCount((cnt), __WFILE__, __LINE__)
-#define CHECK_HR(dwr) win32cpp::checkHr((dwr), __WFILE__, __LINE__)
-#define CHECK_WIN32(dwr) win32cpp::checkWin32((dwr), __WFILE__, __LINE__)
-#define CHECK(r1, r2) win32cpp::check((r1), (r2), __WFILE__, __LINE__)
+#define CHECK_BOOL(br) win32cpp::checkBool((br), __FILEW__, __LINE__)
+#define CHECK_COUNT(cnt) win32cpp::checkCount((cnt), __FILEW__, __LINE__)
+#define CHECK_HR(dwr) win32cpp::checkHr((dwr), __FILEW__, __LINE__)
+#define CHECK_WIN32(dwr) win32cpp::checkWin32((dwr), __FILEW__, __LINE__)
+#define CHECK(r1, r2) win32cpp::check((r1), (r2), __FILEW__, __LINE__)
 
 #define LANGID_ENGLISH 1033
 

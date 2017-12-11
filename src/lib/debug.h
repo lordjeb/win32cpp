@@ -1,12 +1,6 @@
 #pragma once
 #include <crtdbg.h>
 
-// Wide-character versions of built-in macros
-#define WIDEN2(x) L##x
-#define WIDEN(x) WIDEN2(x)
-#define __WFILE__ WIDEN(__FILE__)
-#define __WFUNCTION__ WIDEN(__FUNCTION__)
-
 // Checks the expression in debug builds, does NOTHING in release builds
 #define ASSERT _ASSERTE
 
@@ -34,10 +28,10 @@ namespace win32cpp
 
 // Output formatted string to debugger with filename and line  number (debug builds only)
 #ifdef _DEBUG
-#define TRACE win32cpp::tracer(__WFILE__, __LINE__)
+#define TRACE win32cpp::tracer(__FILEW__, __LINE__)
 #else
 #define TRACE __noop
 #endif
 
 // As TRACE but includes release and debug builds
-#define RELTRACE win32cpp::tracer(__WFILE__, __LINE__)
+#define RELTRACE win32cpp::tracer(__FILEW__, __LINE__)
