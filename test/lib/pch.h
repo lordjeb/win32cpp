@@ -14,5 +14,6 @@ using namespace testing;
 #include <Windows.h>
 
 // win32cpp
+#include "debug.h"
 #include "error.h"
 using namespace win32cpp;

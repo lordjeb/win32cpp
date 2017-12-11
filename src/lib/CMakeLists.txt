@@ -1,11 +1,12 @@
 set(header_list
     debug.h
+    dynamic_library.h
     error.h
     handle.h
     lock_guard.h
     map_view_deleter.h
     module_info.h
-	pch.h
+    pch.h
     performance.h
     privilege_guard.h
     memory.h
@@ -20,7 +21,7 @@ set(source_list
     module_info.cpp
     performance.cpp
     privilege_guard.cpp
-	service.cpp
+    service.cpp
     string_extensions.cpp
 )
 
