@@ -79,6 +79,21 @@ namespace win32cpp
         }
     };
 
+    struct module_handle_traits
+    {
+        typedef HMODULE pointer;
+
+        static auto invalid() noexcept -> pointer
+        {
+            return nullptr;
+        }
+
+        static auto close(const pointer value) noexcept -> void
+        {
+            VERIFY(::FreeLibrary(value));
+        }
+    };
+
     struct service_handle_traits
     {
         typedef SC_HANDLE pointer;
@@ -260,6 +275,7 @@ namespace win32cpp
     typedef basic_unique_handle<invalid_handle_traits> unique_file_handle;
     typedef basic_unique_handle<find_handle_traits> unique_find_handle;
     typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
+    typedef basic_unique_handle<module_handle_traits> unique_library_handle;
     typedef basic_unique_handle<service_handle_traits> unique_service_handle;
     typedef basic_unique_handle<http_handle_traits> unique_http_handle;
 
