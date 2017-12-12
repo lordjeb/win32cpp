@@ -34,7 +34,7 @@ void win32cpp::console_service_controller::add(std::shared_ptr<service_base> p)
 
 void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[])
 {
-    SetConsoleCtrlHandler(CtrlHandler, TRUE);
+    SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
     m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
     CHECK_BOOL(bool(m_serviceStopEvent));
 
