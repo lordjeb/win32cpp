@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Dynamic Debug x64 (Vs2017 Toolset)",
+            "label": "Build",
             "type": "shell",
             "command": "powershell.exe ./build.ps1 -VisualStudioVersion Vs2017 -Runtime Dynamic -Platform x64 -Config Debug",
             "problemMatcher": [
@@ -14,6 +14,16 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "command": "${workspaceFolder}/build_Vs2017_x64_dynamic/test/lib/Debug/lib_tests.exe",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "Build"
         }
     ]
 }
