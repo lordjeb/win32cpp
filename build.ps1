@@ -7,10 +7,12 @@ Param(
     [ValidateSet('All', 'Debug', 'Release')]
     [String] $Config = 'All',
     [ValidateSet('All', 'Win32', 'x64')]
-    [String] $Platform = 'All'
+    [String] $Platform = 'All',
+    [switch] $Package
 )
 
 $cmake = 'cmake.exe'
+$package_dir = 'package'
 
 function Invoke-CMakeGenerator(
     [ValidateSet('Vs2015', 'Vs2017')]
@@ -49,6 +51,21 @@ function Invoke-CMakeGenerator(
     Write-Output "$cmake --build $Directory --config $Config"
     & $cmake --build $Directory --config $Config
     if ($LastExitCode -ne 0) { exit }
+
+    # Copy output somewhere interesting for packaging
+    if ($Package) {
+        $lib_dir = $package_dir + '\lib'
+        if ($Runtime -eq 'static') {
+            $lib_dir += '\crt'
+        }
+        else {
+            $lib_dir += '\crtdll'
+        }
+        $lib_dir += '\' + $Platform + '\' + $Config
+
+        New-Item -ItemType Directory -Path $lib_dir | Out-Null
+        Copy-Item -Path ($Directory + "\\src\\lib\\$Config\\*") -Destination $lib_dir
+    }
 }
 
 if ($Runtime -eq 'All') {
@@ -70,6 +87,17 @@ if ($Config -eq 'All') {
 }
 else {
     $Configs = @($Config)
+}
+
+if ($Package) {
+    if (Test-Path $package_dir) {
+        Remove-Item -Recurse $package_dir | Out-Null
+    }
+
+    # Copy headers to 'package\include\win32cpp'
+    $include_dir = $package_dir + '\include\win32cpp'
+    New-Item -ItemType Directory -Path $include_dir | Out-Null
+    Copy-Item -Path 'src\lib\*.h' -Destination $include_dir -Exclude 'pch.h'
 }
 
 foreach ($r in $Runtimes) {
