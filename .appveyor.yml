@@ -1,7 +1,7 @@
 shallow_clone: false
 
 platform:
-  - x86
+  - Win32
   - x64
 
 configuration:
