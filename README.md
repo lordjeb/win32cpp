@@ -1,6 +1,6 @@
 # win32cpp
 
-![](https://ci.appveyor.com/api/projects/status/github/lordjeb/win32cpp?svg=true)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/lordjeb/win32cpp?svg=true)](https://ci.appveyor.com/project/lordjeb/win32cpp)
 
 Writing Win32 code in straight-C can be error-prone; Sometimes even the best programmers forget to call CloseHandle in an error condition. C++ has introduced a lot of default functionality that really can assist in always writing correct code by default.
 
