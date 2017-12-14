@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [ValidateSet('Vs2015', 'Vs2017')]
+    [ValidateSet('All', 'Vs2015', 'Vs2017')]
     [String] $VisualStudioVersion = 'Vs2015',
     [ValidateSet('All', 'Static', 'Dynamic')]
     [String] $Runtime = 'All',
@@ -68,6 +68,13 @@ function Invoke-CMakeGenerator(
     }
 }
 
+if ($VisualStudioVersion -eq 'All') {
+    $VisualStudioVersions = 'Vs2015', 'Vs2017'
+}
+else {
+    $VisualStudioVersions = @($VisualStudioVersion)
+}
+
 if ($Runtime -eq 'All') {
     $Runtimes = 'Static', 'Dynamic'
 }
@@ -100,10 +107,12 @@ if ($Package) {
     Copy-Item -Path 'src\lib\*.h' -Destination $include_dir -Exclude 'pch.h'
 }
 
-foreach ($r in $Runtimes) {
-    foreach ($p in $Platforms) {
-        foreach ($c in $Configs) {
-            Invoke-CMakeGenerator -VisualStudioVersion $VisualStudioVersion -Runtime $r -Platform $p -Config $c
+foreach ($v in $VisualStudioVersions) {
+    foreach ($r in $Runtimes) {
+        foreach ($p in $Platforms) {
+            foreach ($c in $Configs) {
+                Invoke-CMakeGenerator -VisualStudioVersion $VisualStudioVersion -Runtime $r -Platform $p -Config $c
+            }
         }
     }
 }
