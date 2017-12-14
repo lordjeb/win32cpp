@@ -35,11 +35,11 @@ build_script:
 test_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
-          $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+          $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe --gtest_output=xml'
       } else {
-          $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+          $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe --gtest_output=xml'
       }
-      Invoke-Expression $TestExecutable --gtest_output=xml
+      Invoke-Expression $TestExecutable
       $wc = New-Object 'System.Net.WebClient'
       $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test_detail.xml))
 
