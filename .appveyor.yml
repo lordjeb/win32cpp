@@ -27,13 +27,18 @@ install:
 build_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
-          .\build.ps1 -VisualStudioVersion Vs2015
+          .\build.ps1 -VisualStudioVersion Vs2015 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
       } else {
-          .\build.ps1 -VisualStudioVersion Vs2017
+          .\build.ps1 -VisualStudioVersion Vs2017 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
       }
 
-#test_script:
-#  - ps: |
-#      $test_dir = 'build_' + $VisualStudioVersion + '_' + $Platform + '_' + $Runtime
+test_script:
+  - ps: |
+      if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
+          $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_' + static + '\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+      } else {
+          $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_' + static + '\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+      }
+      Invoke-Command $TestExecutable
 
 deploy: off
