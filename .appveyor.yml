@@ -26,9 +26,9 @@ install:
 build_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
-          build.ps1 -VisualStudioVersion Vs2015
+          .\build.ps1 -VisualStudioVersion Vs2015
       } else {
-          build.ps1 -VisualStudioVersion Vs2017
+          .\build.ps1 -VisualStudioVersion Vs2017
       }
 
 deploy: off
