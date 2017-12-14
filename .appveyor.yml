@@ -1,3 +1,5 @@
+version: {build}-{branch}
+
 shallow_clone: false
 
 platform:
