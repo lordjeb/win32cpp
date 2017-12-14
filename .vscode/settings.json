@@ -1,0 +1,8 @@
+{
+    "clang-format.executable": "C:/Program Files/LLVM/bin/clang-format.exe",
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.cpp": "cpp",
+        "*.h": "cpp"
+    }
+}

@@ -100,9 +100,6 @@ ipch/
 *.nuget.props
 *.nuget.targets
 
-# Visual Studio Code
-.vscode
-
 # Build output
 Build_Vs*/
 
