@@ -25,7 +25,7 @@ set(source_list
     string_extensions.cpp
 )
 
-
+set(CMAKE_DEBUG_POSTFIX  "")
 
 ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
 add_library(win32cpp STATIC
