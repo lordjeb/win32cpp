@@ -46,11 +46,11 @@ function Invoke-CMakeGenerator(
     Write-Output "$cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" .."
     & $cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" ..
     Pop-Location
-    if ($LastExitCode -ne 0) { exit }
+    if ($LastExitCode -ne 0) { exit -1 }
 
     Write-Output "$cmake --build $Directory --config $Config"
     & $cmake --build $Directory --config $Config
-    if ($LastExitCode -ne 0) { exit }
+    if ($LastExitCode -ne 0) { exit -1 }
 
     # Copy output somewhere interesting for packaging
     if ($Package) {
