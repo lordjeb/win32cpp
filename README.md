@@ -29,21 +29,7 @@ if (my_handle)
 }
 ```
 
-If you wanted to get the temporary path and add a filename to it, instead of the following...
-
-```c++
-WCHAR tempPathBuffer[MAX_PATH];
-if (0 == GetTempPathW(MAX_PATH, tempPathBuffer))
-{
-    wcscat(tempPathBuffer, L"filename.tmp");
-}
-```
-
-You might try this...
-
-```c++
-appendPath(getTempPath(), L"filename.tmp");
-```
+For more detailed examples and documentation, please see the [Docs](docs\OVERVIEW.md).
 
 ## Building win32cpp
 

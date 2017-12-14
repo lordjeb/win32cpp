@@ -1,12 +1,9 @@
 #pragma once
 #include <crtdbg.h>
 
-// Checks the expression in debug builds, does NOTHING in release builds
-#define ASSERT _ASSERTE
-
 // Checks the expression in debug builds, executes but does not check the expression in release builds
 #ifdef _DEBUG
-#define VERIFY ASSERT
+#define VERIFY _ASSERTE
 #else
 #define VERIFY(expression) (expression)
 #endif

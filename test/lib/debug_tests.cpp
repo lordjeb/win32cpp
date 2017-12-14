@@ -3,7 +3,7 @@
 
 TEST(debug_test, assertions)
 {
-    ASSERT(true);
+    VERIFY(true);
 }
 
 TEST(debug_test, tracing)

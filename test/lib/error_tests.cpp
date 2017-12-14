@@ -35,6 +35,6 @@ TEST(error_test, check_win32)
 
 TEST(error_test, check_equal)
 {
-    EXPECT_THROW(CHECK(0, 1), check_failed);
-    EXPECT_NO_THROW(CHECK(0, 0));
+    EXPECT_THROW(CHECK_EQ(0, 1), check_failed);
+    EXPECT_NO_THROW(CHECK_EQ(0, 0));
 }

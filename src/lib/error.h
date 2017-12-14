@@ -7,7 +7,8 @@
 #define CHECK_COUNT(cnt) win32cpp::checkCount((cnt), __FILEW__, __LINE__)
 #define CHECK_HR(dwr) win32cpp::checkHr((dwr), __FILEW__, __LINE__)
 #define CHECK_WIN32(dwr) win32cpp::checkWin32((dwr), __FILEW__, __LINE__)
-#define CHECK(r1, r2) win32cpp::check((r1), (r2), __FILEW__, __LINE__)
+#define CHECK_EQ(r1, r2) win32cpp::checkEq((r1), (r2), __FILEW__, __LINE__)
+#define CHECK_NE(r1, r2) win32cpp::checkNe((r1), (r2), __FILEW__, __LINE__)
 
 #define LANGID_ENGLISH 1033
 
@@ -84,7 +85,7 @@ namespace win32cpp
 
     inline void checkHr(HRESULT hr)
     {
-        if (S_OK != hr)
+        if (FAILED(hr))
         {
             throw check_failed(hr);
         }
@@ -92,7 +93,7 @@ namespace win32cpp
 
     inline void checkHr(HRESULT hr, const wchar_t* file, int line)
     {
-        if (S_OK != hr)
+        if (FAILED(hr))
         {
             outputDebugStringEx(L"%s(%d): HRESULT result failure (0x%08x)\n", file, line, hr);
             throw check_failed(hr, file, line);
@@ -117,7 +118,7 @@ namespace win32cpp
     }
 
     template <typename T>
-    void check(T expected, T actual)
+    inline void checkEq(T expected, T actual)
     {
         if (expected != actual)
         {
@@ -126,9 +127,28 @@ namespace win32cpp
     }
 
     template <typename T>
-    void check(T expected, T actual, const wchar_t* file, int line)
+    inline void checkEq(T expected, T actual, const wchar_t* file, int line)
     {
         if (expected != actual)
+        {
+            outputDebugStringEx(L"%s(%d): check failure\n", file, line);
+            throw check_failed(0, file, line);
+        }
+    }
+
+    template <typename T>
+    inline void checkNe(T expected, T actual)
+    {
+        if (expected == actual)
+        {
+            throw check_failed(0);
+        }
+    }
+
+    template <typename T>
+    inline void checkNe(T expected, T actual, const wchar_t* file, int line)
+    {
+        if (expected == actual)
         {
             outputDebugStringEx(L"%s(%d): check failure\n", file, line);
             throw check_failed(0, file, line);

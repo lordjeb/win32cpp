@@ -174,7 +174,7 @@ namespace win32cpp
 
         auto get_address_of() noexcept -> pointer*
         {
-            ASSERT(!*this);
+            _ASSERTE(!*this);
             return &m_value;
         }
 
