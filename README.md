@@ -29,7 +29,7 @@ if (my_handle)
 }
 ```
 
-For more detailed examples and documentation, please see the [Docs](docs\OVERVIEW.md).
+For more detailed examples and documentation, please see the [Docs](docs/OVERVIEW.md).
 
 ## Building win32cpp
 
