@@ -35,9 +35,9 @@ build_script:
 test_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
-          $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_' + static + '\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+          $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       } else {
-          $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_' + static + '\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+          $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       }
       Invoke-Command $TestExecutable
 
