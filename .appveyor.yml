@@ -39,6 +39,14 @@ test_script:
       } else {
           $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       }
-      Invoke-Command $TestExecutable
+      Invoke-Expression $TestExecutable
 
 deploy: off
+
+notifications:
+  - provider: Email
+    to:
+      - lordjeb@lordjeb.com
+    subject: 'Build {{status}}'
+    message: "{{message}}, {{commitId}}, ..."
+    on_build_status_changed: true
