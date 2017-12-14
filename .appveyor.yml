@@ -8,7 +8,6 @@ platform:
 
 configuration:
   - Debug
-  - Release
 
 image:
   - Visual Studio 2015
@@ -52,16 +51,3 @@ notifications:
     subject: 'Build {{status}}'
     message: "{{message}}, {{commitId}}, ..."
     on_build_status_changed: true
-
-deploy:
-  release: win32cpp-v$(appveyor_build_version)
-  description: 'win32cpp release $(appveyor_build_version)'
-  provider: GitHub
-  auth_token:
-    secure: fYGohnQpLx+RWoPGxAbOTU9QdFePPcqYEpfjXQskzIRzMpoh1roRckyTNAJZb7RM
-  artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
-  draft: false
-  prerelease: false
-  on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
