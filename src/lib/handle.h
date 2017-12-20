@@ -3,7 +3,6 @@
 #include "error.h"
 #include <memory>
 #include <vector>
-#include <winhttp.h>
 
 // using namespace std;
 
@@ -106,21 +105,6 @@ namespace win32cpp
         static auto close(const pointer value) noexcept -> void
         {
             VERIFY(::CloseServiceHandle(value));
-        }
-    };
-
-    struct http_handle_traits
-    {
-        typedef HINTERNET pointer;
-
-        static auto invalid() noexcept -> pointer
-        {
-            return nullptr;
-        }
-
-        static auto close(const pointer value) noexcept -> void
-        {
-            VERIFY(::CloseHandle(value));
         }
     };
 
@@ -277,7 +261,6 @@ namespace win32cpp
     typedef basic_unique_handle<registry_handle_traits> unique_registry_handle;
     typedef basic_unique_handle<module_handle_traits> unique_library_handle;
     typedef basic_unique_handle<service_handle_traits> unique_service_handle;
-    typedef basic_unique_handle<http_handle_traits> unique_http_handle;
 
     class unique_token_handle : public basic_unique_handle<null_handle_traits>
     {

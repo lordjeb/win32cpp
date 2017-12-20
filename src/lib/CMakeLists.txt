@@ -13,6 +13,7 @@ set(header_list
     service.h
     string_extensions.h
     windows_constants.h
+    winhttp_handle.h
 )
 
 set(source_list
