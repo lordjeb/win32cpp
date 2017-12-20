@@ -2,10 +2,12 @@
 #include <crtdbg.h>
 
 // Checks the expression in debug builds, executes but does not check the expression in release builds
+#ifndef VERIFY
 #ifdef _DEBUG
 #define VERIFY _ASSERTE
 #else
 #define VERIFY(expression) (expression)
+#endif
 #endif
 
 namespace win32cpp
@@ -24,11 +26,15 @@ namespace win32cpp
 }
 
 // Output formatted string to debugger with filename and line  number (debug builds only)
+#ifndef TRACE
 #ifdef _DEBUG
 #define TRACE win32cpp::tracer(__FILEW__, __LINE__)
 #else
 #define TRACE __noop
 #endif
+#endif
 
 // As TRACE but includes release and debug builds
+#ifndef RELTRACE
 #define RELTRACE win32cpp::tracer(__FILEW__, __LINE__)
+#endif
