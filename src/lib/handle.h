@@ -73,7 +73,10 @@ namespace win32cpp
             // handles look like, so we should be okay as long as dealing with registry keys.
             if (value < HKEY_CLASSES_ROOT)
             {
+#pragma warning(push)
+#pragma warning(disable : 6387)
                 VERIFY(ERROR_SUCCESS == ::RegCloseKey(value));
+#pragma warning(pop)
             }
         }
     };
