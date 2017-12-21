@@ -18,7 +18,7 @@ namespace win32cpp
         int unpack[]{ 0, (result +=
                           result.empty() ? trimRight(to_wstring(args), ispath) : L'\\' + trim(to_wstring(args), ispath),
                           0)... };
-        return result;
+        return trimRight(result, ispath);
     }
 
     // Convert a std::string to a std::wstring

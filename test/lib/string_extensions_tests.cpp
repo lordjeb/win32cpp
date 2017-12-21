@@ -4,6 +4,11 @@
 using namespace win32cpp;
 using testing::StrEq;
 
+TEST(string_extensions_test, appendPath_appends_empty_string_without_extra_slash)
+{
+    ASSERT_THAT(appendPath(L"C:\\root_dir", L""), StrEq(LR"(C:\root_dir)"));
+}
+
 TEST(string_extensions_test, appendPath_appends_n_paths)
 {
     ASSERT_THAT(appendPath(L"C:", L"root_dir", L"subdir"), StrEq(LR"(C:\root_dir\subdir)"));
