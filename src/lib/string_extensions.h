@@ -56,4 +56,10 @@ namespace win32cpp
 
     // Convert a std::wstring to a std::string
     auto wstr2str(const std::wstring&) -> std::string;
+
+    // Convert from UTF-16 to UTF-8
+    auto wstr2utf8(const std::wstring& in) -> std::string;
+
+    // Convert from UTF-8 to UTF-16
+    auto utf8towstr(const std::string& in) -> std::wstring;
 }
