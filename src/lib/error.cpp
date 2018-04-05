@@ -13,3 +13,16 @@ wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_
     CHECK_COUNT(FormatMessageW(flags, nullptr, errorCode, languageId, (LPWSTR)&ptr_setter(x), 0, nullptr));
     return trimRight(static_cast<const wchar_t*>(x.get()), isspace);
 }
+
+win32cpp::check_failed::check_failed(long result, const wchar_t* message) : std::exception(wstr2utf8(message).c_str()), error(result)
+{
+}
+
+win32cpp::check_failed::check_failed(long result, const wchar_t* file, int line, const wchar_t* message) : std::exception(wstr2utf8(message).c_str()), error(result), file{ file }, line{ line }
+{
+}
+
+std::wstring win32cpp::check_failed::w_what() const
+{
+	return utf8towstr(what());
+}
