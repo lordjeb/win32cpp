@@ -28,16 +28,28 @@ win32cpp offers a standard way of checking and handling Win32 error codes. A set
 
 Macro | Check performed
 ----- | ---------------
-CHECK_BOOL | Throws exception if the value is FALSE or false
-CHECK_COUNT | Throws exception if the value is zero
-CHECK_HR | Throws exception if FAILED() is true
-CHECK_WIN32 | Throws exception if the value is not ERROR_SUCCESS
-CHECK_EQ | Throws exception if the two provided values are not equal
+CHECK_BOOL | Throws `win32_check_failed` exception if the value is FALSE or false
+CHECK_COUNT | Throws `win32_check_failed` exception if the value is zero
+CHECK_HR | Throws `hresult_check_failed` exception if FAILED() is true
+CHECK_WIN32 | Throws `win32_check_failed` exception if the value is not ERROR_SUCCESS
+CHECK_EQ | Throws `check_failed` exception if the two provided values are not equal
+
+`#include <win32cpp\nt_error.h>`
+
+Macro | Check performed
+----- | ---------------
+CHECK_NTSTATUS | Throws `ntstatus_check_failed` exception if NT_ERROR() is true
 
 This can result in greatly-improved readability of Win32 code:
 
 ```c++
 CHECK_BOOL(ReadFile(my_handle.get(), ...));
+```
+
+Each macro takes in an optional message parameter:
+
+```c++
+CHECK_WIN32(RegOpenKeyEx(...), L"Unable to find registry key");
 ```
 
 Also included is a function `getErrorMessage` to return a displayable error message.
