@@ -38,7 +38,7 @@ CHECK_EQ | Throws `check_failed` exception if the two provided values are not eq
 
 Macro | Check performed
 ----- | ---------------
-CHECK_NTSTATUS | Throws `ntstatus_check_failed` exception if NT_ERROR() is true
+CHECK_NTSTATUS | Throws `ntstatus_check_failed` exception if NT_SUCCESS() is false
 
 This can result in greatly-improved readability of Win32 code:
 
