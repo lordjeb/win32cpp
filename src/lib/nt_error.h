@@ -26,6 +26,12 @@ namespace win32cpp
 		{
 			return error;
 		}
+
+	protected:
+		virtual const char* errorCodeMessage() const override
+		{
+			return u8"NTSTATUS: ";
+		}
 	};
 
 	inline void checkNtStatus(NTSTATUS ntstatus)

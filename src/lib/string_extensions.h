@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 namespace win32cpp
 {
@@ -62,4 +63,23 @@ namespace win32cpp
 
     // Convert from UTF-8 to UTF-16
     auto utf8towstr(const std::string& in) -> std::wstring;
+
+	// https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/26221725#26221725 (CC0 1.0 licensed)
+	template<typename ... Args>
+	auto format(const std::string& format, Args ... args) -> std::string
+	{
+		size_t size = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+		std::unique_ptr<char[]> buf(new char[size]);
+		std::snprintf(buf.get(), size, format.c_str(), args ...);
+		return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+	}
+
+	template<typename ... Args>
+	auto format(const std::wstring& format, Args ... args) -> std::wstring
+	{
+		size_t size = std::swprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+		std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
+		std::swprintf(buf.get(), size, format.c_str(), args ...);
+		return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+	}
 }

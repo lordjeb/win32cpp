@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "error.h"
+#include "string_extensions.h"
 
 using namespace win32cpp;
 using testing::StrEq;
@@ -53,20 +54,21 @@ TEST(error_test, check_failed_converts_message_to_utf8)
 	}
 	catch (const check_failed& e)
 	{
-		ASSERT_STREQ(e.what(), "Something unexpected happened \xE0\xB0\x85\xE0\xB0\x83\xE0\xB0\x93\xE0\xB0\x85\xE0\xB1\x8C\xE0\xB1\xA9");
-		ASSERT_STREQ(e.w_what().c_str(), message);
+		ASSERT_STREQ(e.what(), "[0x00000000] Something unexpected happened \xE0\xB0\x85\xE0\xB0\x83\xE0\xB0\x93\xE0\xB0\x85\xE0\xB1\x8C\xE0\xB1\xA9");
+		ASSERT_STREQ(e.w_what().c_str(), format(L"[0x00000000] %s", message).c_str());
 	}
 }
 
 TEST(error_test, check_macro_accepts_optional_message)
 {
+	int lineNum;
 	try
 	{
-		CHECK_HR(E_FAIL, L"The COM component gave up");
+		lineNum = __LINE__;  CHECK_HR(E_FAIL, L"The COM component gave up");
 	}
 	catch (const hresult_check_failed& e)
 	{
-		ASSERT_STREQ(e.what(), "The COM component gave up");
+		ASSERT_STREQ(e.what(), format("error_tests.cpp(%d): [HRESULT: 0x80004005] The COM component gave up", lineNum).c_str());
 	}
 }
 
@@ -93,5 +95,55 @@ TEST(error_test, win32_check_failed_contains_wcode)
 	{
 		ASSERT_EQ(e.wcode(), ERROR_FILE_NOT_FOUND);
 		ASSERT_EQ(e.wcode(), e.error);
+	}
+}
+
+TEST(error_test, win32_check_failed_gives_custom_what)
+{
+	int lineNum;
+	try
+	{
+		lineNum = __LINE__; CHECK_WIN32(ERROR_BAD_ARGUMENTS, L"Bad parameter");
+	}
+	catch (const std::exception& e)
+	{
+		ASSERT_STREQ(e.what(), format("error_tests.cpp(%d): [WCODE: 0x000000a0] Bad parameter", lineNum).c_str());
+	}
+}
+
+TEST(error_test, hresult_check_failed_gives_custom_what)
+{
+	int lineNum;
+	try
+	{
+		lineNum = __LINE__; CHECK_HR(E_INVALIDARG, L"Bad parameter");
+	}
+	catch (const std::exception& e)
+	{
+		ASSERT_STREQ(e.what(), format("error_tests.cpp(%d): [HRESULT: 0x80070057] Bad parameter", lineNum).c_str());
+	}
+}
+
+TEST(error_test, win32_check_failed_without_macro_gives_what_without_file_and_line)
+{
+	try
+	{
+		throw win32_check_failed(ERROR_BAD_ARGUMENTS, L"Bad parameter");
+	}
+	catch (const std::exception& e)
+	{
+		ASSERT_STREQ(e.what(), format("[WCODE: 0x000000a0] Bad parameter").c_str());
+	}
+}
+
+TEST(error_test, win32_check_failed_without_line_gives_what_without_line)
+{
+	try
+	{
+		throw win32_check_failed(ERROR_BAD_ARGUMENTS, __FILEW__, -1, L"Bad parameter");
+	}
+	catch (const std::exception& e)
+	{
+		ASSERT_STREQ(e.what(), format("error_tests.cpp: [WCODE: 0x000000a0] Bad parameter").c_str());
 	}
 }
