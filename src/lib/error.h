@@ -25,10 +25,15 @@ namespace win32cpp
         }
 
         virtual std::wstring w_what() const;
+		virtual char const* what() const override;
 
         long error;
         const wchar_t* file;
         int line;
+
+	protected:
+		virtual const char * errorCodeMessage() const;
+		mutable std::string message;
     };
 
     struct hresult_check_failed : public check_failed
@@ -50,6 +55,9 @@ namespace win32cpp
         {
             return static_cast<HRESULT>(error);
         }
+
+	protected:
+		virtual const char* errorCodeMessage() const override;
     };
 
     struct win32_check_failed : public check_failed
@@ -71,6 +79,9 @@ namespace win32cpp
         {
             return static_cast<DWORD>(error);
         }
+
+	protected:
+		virtual const char* errorCodeMessage() const override;
     };
 
     inline void checkBool(bool br)
