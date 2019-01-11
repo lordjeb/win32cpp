@@ -10,26 +10,6 @@ namespace win32cpp
         return _C == L'\\' || _C == L'/';
     }
 
-    // Appends two sections of path together with a backslash separator, ensuring that
-    // there are no extra separators
-    template <typename... Args>
-    std::wstring appendPath(Args const&... args)
-    {
-        std::wstring result;
-        int unpack[]{ 0, (result +=
-                          result.empty() ? trimRight(to_wstring(args), ispath) : L'\\' + trim(to_wstring(args), ispath),
-                          0)... };
-        return trimRight(result, ispath);
-    }
-
-    // Convert a std::string to a std::wstring
-    auto str2wstr(const std::string&) -> std::wstring;
-
-    inline std::wstring const& to_wstring(std::wstring const& s)
-    {
-        return s;
-    }
-
     // Trim whitespace characters from the beginning and end of a string
     template <typename _Px>
     auto trim(const std::wstring& s, _Px pred) -> std::wstring
@@ -55,6 +35,26 @@ namespace win32cpp
         return std::wstring{ begin(s), back.base() };
     }
 
+    // Appends two sections of path together with a backslash separator, ensuring that
+    // there are no extra separators
+    template <typename... Args>
+    std::wstring appendPath(Args const&... args)
+    {
+        std::wstring result;
+        int unpack[]{ 0, (result +=
+                          result.empty() ? trimRight(to_wstring(args), ispath) : L'\\' + trim(to_wstring(args), ispath),
+                          0)... };
+        return trimRight(result, ispath);
+    }
+
+    // Convert a std::string to a std::wstring
+    auto str2wstr(const std::string&) -> std::wstring;
+
+    inline std::wstring const& to_wstring(std::wstring const& s)
+    {
+        return s;
+    }
+
     // Convert a std::wstring to a std::string
     auto wstr2str(const std::wstring&) -> std::string;
 
@@ -64,22 +64,23 @@ namespace win32cpp
     // Convert from UTF-8 to UTF-16
     auto utf8towstr(const std::string& in) -> std::wstring;
 
-	// https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/26221725#26221725 (CC0 1.0 licensed)
-	template<typename ... Args>
-	auto format(const std::string& format, Args ... args) -> std::string
-	{
-		size_t size = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-		std::unique_ptr<char[]> buf(new char[size]);
-		std::snprintf(buf.get(), size, format.c_str(), args ...);
-		return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-	}
+    // https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/26221725#26221725 (CC0 1.0
+    // licensed)
+    template <typename... Args>
+    auto format(const std::string& format, Args... args) -> std::string
+    {
+        size_t size = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
+        std::unique_ptr<char[]> buf(new char[size]);
+        std::snprintf(buf.get(), size, format.c_str(), args...);
+        return std::string(buf.get(), buf.get() + size - 1);   // We don't want the '\0' inside
+    }
 
-	template<typename ... Args>
-	auto format(const std::wstring& format, Args ... args) -> std::wstring
-	{
-		size_t size = std::swprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-		std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
-		std::swprintf(buf.get(), size, format.c_str(), args ...);
-		return std::wstring(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-	}
+    template <typename... Args>
+    auto format(const std::wstring& format, Args... args) -> std::wstring
+    {
+        size_t size = std::swprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
+        std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
+        std::swprintf(buf.get(), size, format.c_str(), args...);
+        return std::wstring(buf.get(), buf.get() + size - 1);   // We don't want the '\0' inside
+    }
 }
