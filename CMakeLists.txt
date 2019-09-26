@@ -13,6 +13,7 @@ endif()
 
 add_definitions(-DUNICODE)
 add_definitions(-D_UNICODE)
+add_definitions(/permissive-)
 
 #Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
