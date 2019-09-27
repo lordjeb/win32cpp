@@ -71,16 +71,27 @@ namespace win32cpp
     {
         size_t size = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
         std::unique_ptr<char[]> buf(new char[size]);
-        std::snprintf(buf.get(), size, format.c_str(), args...);
+        if (std::snprintf(buf.get(), size, format.c_str(), args...) < 0)
+        {
+            throw std::exception("Failed to format string.");
+        }
         return std::string(buf.get(), buf.get() + size - 1);   // We don't want the '\0' inside
     }
 
     template <typename... Args>
     auto format(const std::wstring& format, Args... args) -> std::wstring
     {
+#if (_MSC_VER < 1910)
+// warning C6387: '_Param_(1)' could be '0':  this does not adhere to the specification for the function 'swprintf'
+// It is acceptable for the buffer count to be 0 because the buffer is null
+#pragma warning(suppress : 6387)
+#endif
         size_t size = std::swprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
         std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
-        std::swprintf(buf.get(), size, format.c_str(), args...);
+        if (std::swprintf(buf.get(), size, format.c_str(), args...) < 0)
+        {
+            throw std::exception("Failed to format string.");
+        }
         return std::wstring(buf.get(), buf.get() + size - 1);   // We don't want the '\0' inside
     }
 }
