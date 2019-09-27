@@ -46,6 +46,8 @@ namespace win32cpp
                 m_ss.dwCurrentState = SERVICE_START_PENDING;
                 m_ss.dwCheckPoint = 1;
                 m_ss.dwWaitHint = 500;   // TODO: Get these from the T
+// We are checking m_ssh for non-zero-ness above and throwing, but code analysis fails to detect this
+#pragma warning(suppress : 6387)
                 CHECK_BOOL(SetServiceStatus(m_ssh, &m_ss));
 
                 m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
