@@ -12,6 +12,7 @@ configuration:
 image:
   - Visual Studio 2015
   - Visual Studio 2017
+  - Visual Studio 2019
 
 cache:
   - C:\cmake-3.10.0-win64-x64
@@ -29,16 +30,20 @@ build_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
           .\build.ps1 -VisualStudioVersion Vs2015 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
-      } else {
+      } elseif ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2017") {
           .\build.ps1 -VisualStudioVersion Vs2017 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
+      } else {
+          .\build.ps1 -VisualStudioVersion Vs2019 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
       }
 
 test_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
           $TestExecutable = 'build_Vs2015_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
-      } else {
+      } elseif ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2017") {
           $TestExecutable = 'build_Vs2017_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
+      } else {
+          $TestExecutable = 'build_Vs2019_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       }
       Invoke-Expression $TestExecutable
 
