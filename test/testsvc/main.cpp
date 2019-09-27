@@ -98,7 +98,7 @@ public:
     }
 };
 
-void wmain(int argc, wchar_t* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
     bool console_mode = true;
 
@@ -150,6 +150,8 @@ void wmain(int argc, wchar_t* argv[])
 
             serviceRegistration.startDispatcher();
         }
+
+        return 0;
     }
     catch (const check_failed& e)
     {
@@ -187,4 +189,6 @@ void wmain(int argc, wchar_t* argv[])
     }
 
     TRACE(L"- testsvc::wmain\n");
+
+    return 1;
 }

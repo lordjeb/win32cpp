@@ -35,6 +35,11 @@ namespace win32cpp
         return std::wstring{ begin(s), back.base() };
     }
 
+    inline std::wstring const& to_wstring(std::wstring const& s)
+    {
+        return s;
+    }
+
     // Appends two sections of path together with a backslash separator, ensuring that
     // there are no extra separators
     template <typename... Args>
@@ -49,11 +54,6 @@ namespace win32cpp
 
     // Convert a std::string to a std::wstring
     auto str2wstr(const std::string&) -> std::wstring;
-
-    inline std::wstring const& to_wstring(std::wstring const& s)
-    {
-        return s;
-    }
 
     // Convert a std::wstring to a std::string
     auto wstr2str(const std::wstring&) -> std::string;
