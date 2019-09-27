@@ -45,7 +45,7 @@ test_script:
       } else {
           $TestExecutable = 'build_Vs2019_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       }
-      Invoke-Expression $TestExecutable
+      & $TestExecutable
 
 deploy: off
 
