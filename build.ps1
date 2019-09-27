@@ -8,22 +8,27 @@ Param(
     [String] $Config = 'All',
     [ValidateSet('All', 'Win32', 'x64')]
     [String] $Platform = 'All',
-    [switch] $Package
+    [switch] $Package,
+    [switch] $VerboseBuild
 )
 
 $cmake = 'cmake.exe'
 $package_dir = 'package'
 
-function Invoke-CMakeGenerator(
-    [ValidateSet('Vs2015', 'Vs2017', 'Vs2019')]
-    [String] $VisualStudioVersion,
-    [ValidateSet('Static', 'Dynamic')]
-    [String] $Runtime,
-    [ValidateSet('Debug', 'Release')]
-    [String] $Config,
-    [ValidateSet('Win32', 'x64')]
-    [String] $Platform
-) {
+function Invoke-CMakeGenerator() {
+    [CmdletBinding()]
+    Param(
+        [ValidateSet('Vs2015', 'Vs2017', 'Vs2019')]
+        [String] $VisualStudioVersion,
+        [ValidateSet('Static', 'Dynamic')]
+        [String] $Runtime,
+        [ValidateSet('Debug', 'Release')]
+        [String] $Config,
+        [ValidateSet('Win32', 'x64')]
+        [String] $Platform,
+        [switch] $VerboseBuild
+    )
+
     $Runtime = $Runtime.ToLower()
     $Directory = 'build_' + $VisualStudioVersion + '_' + $Platform + '_' + $Runtime
     if ($VisualStudioVersion -eq 'Vs2015') {
@@ -60,7 +65,11 @@ function Invoke-CMakeGenerator(
     if ($LastExitCode -ne 0) { exit -1 }
 
     Write-Output "$cmake --build $Directory --config $Config"
-    & $cmake --build $Directory --config $Config
+    if ($VerboseBuild) {
+        & $cmake --build $Directory --config $Config --verbose
+    } else {
+        & $cmake --build $Directory --config $Config
+    }
     if ($LastExitCode -ne 0) { exit -1 }
 
     # Copy output somewhere interesting for packaging
@@ -107,6 +116,8 @@ else {
     $Configs = @($Config)
 }
 
+$timer = [Diagnostics.Stopwatch]::StartNew()
+
 if ($Package) {
     if (Test-Path $package_dir) {
         Remove-Item -Recurse $package_dir | Out-Null
@@ -122,8 +133,11 @@ foreach ($v in $VisualStudioVersions) {
     foreach ($r in $Runtimes) {
         foreach ($p in $Platforms) {
             foreach ($c in $Configs) {
-                Invoke-CMakeGenerator -VisualStudioVersion $VisualStudioVersion -Runtime $r -Platform $p -Config $c
+                Invoke-CMakeGenerator -VisualStudioVersion $VisualStudioVersion -Runtime $r -Platform $p -Config $c -VerboseBuild:$VerboseBuild
             }
         }
     }
 }
+
+$timer.Stop()
+Write-Output ('Total Build time: ' + $timer.Elapsed)
