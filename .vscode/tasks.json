@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "powershell.exe ./build.ps1 -VisualStudioVersion Vs2017 -Runtime Dynamic -Platform x64 -Config Debug",
+            "command": "powershell.exe ./build.ps1 -VisualStudioVersion Vs2019 -Runtime Dynamic -Platform x64 -Config Debug",
             "problemMatcher": [
                 "$msCompile"
             ],
@@ -18,7 +18,7 @@
         {
             "label": "Test",
             "type": "shell",
-            "command": "${workspaceFolder}/build_Vs2017_x64_dynamic/test/lib/Debug/lib_tests.exe",
+            "command": "${workspaceFolder}/build_Vs2019_x64_dynamic/test/lib/Debug/lib_tests.exe",
             "group": {
                 "kind": "test",
                 "isDefault": true
