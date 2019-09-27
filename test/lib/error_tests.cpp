@@ -66,8 +66,10 @@ TEST(error_test, check_macro_accepts_optional_message)
     int lineNum;
     try
     {
-        lineNum = __LINE__;
-        CHECK_HR(E_FAIL, L"The COM component gave up");
+        // clang-format off
+        // The following must be on the same line for the string comparison below to work correctly
+        lineNum = __LINE__; CHECK_HR(E_FAIL, L"The COM component gave up");
+        // clang-format on
     }
     catch (const hresult_check_failed& e)
     {
@@ -107,8 +109,10 @@ TEST(error_test, win32_check_failed_gives_custom_what)
     int lineNum;
     try
     {
-        lineNum = __LINE__;
-        CHECK_WIN32(ERROR_BAD_ARGUMENTS, L"Bad parameter");
+        // clang-format off
+        // The following must be on the same line for the string comparison below to work correctly
+        lineNum = __LINE__; CHECK_WIN32(ERROR_BAD_ARGUMENTS, L"Bad parameter");
+        // clang-format on
     }
     catch (const std::exception& e)
     {
@@ -121,8 +125,10 @@ TEST(error_test, hresult_check_failed_gives_custom_what)
     int lineNum;
     try
     {
-        lineNum = __LINE__;
-        CHECK_HR(E_INVALIDARG, L"Bad parameter");
+        // clang-format off
+        // The following must be on the same line for the string comparison below to work correctly
+        lineNum = __LINE__; CHECK_HR(E_INVALIDARG, L"Bad parameter");
+        // clang-format on
     }
     catch (const std::exception& e)
     {
