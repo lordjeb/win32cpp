@@ -14,6 +14,7 @@ set(source_list
 
 ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
+add_definitions("/analyze")
 add_executable(lib_tests 
 	${source_list}
 	)

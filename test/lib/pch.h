@@ -12,6 +12,9 @@
 #pragma warning(pop)
 using namespace testing;
 
+// ASSERT_THAT/EXPECT_THAT macros trigger this warning, so we are disabling it here
+#pragma warning(disable : 6326)
+
 // Windows
 #include "..\..\targetver.h"
 #define WIN32_LEAN_AND_MEAN
