@@ -29,6 +29,7 @@ set(source_list
 set(CMAKE_DEBUG_POSTFIX  "")
 
 ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
+add_definitions("/analyze")
 add_library(win32cpp STATIC
     ${CMAKE_SOURCE_DIR}/README.md
     ${source_list}
