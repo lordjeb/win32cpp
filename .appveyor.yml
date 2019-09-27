@@ -21,7 +21,7 @@ install:
   - git submodule update --init --recursive
   - ps: |
       if (![IO.File]::Exists("C:\cmake-3.15.3-win64-x64\bin\cmake.exe")) {
-        Start-FileDownload 'https://cmake.org/files/v3.10/cmake-3.15.3-win64-x64.zip'
+        Start-FileDownload 'https://github.com/Kitware/CMake/releases/download/v3.15.3/cmake-3.15.3-win64-x64.zip'
         7z x -y cmake-3.15.3-win64-x64.zip -oC:\
       }
       $env:PATH="C:\cmake-3.15.3-win64-x64\bin;$env:PATH"
