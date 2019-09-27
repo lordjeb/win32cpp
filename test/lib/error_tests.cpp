@@ -99,8 +99,8 @@ TEST(error_test, win32_check_failed_contains_wcode)
     }
     catch (const win32_check_failed& e)
     {
-        ASSERT_EQ(e.wcode(), ERROR_FILE_NOT_FOUND);
-        ASSERT_EQ(e.wcode(), e.error);
+        ASSERT_EQ(e.wcode(), static_cast<DWORD>(ERROR_FILE_NOT_FOUND));
+        ASSERT_EQ(e.wcode(), static_cast<DWORD>(e.error));
     }
 }
 
