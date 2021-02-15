@@ -15,12 +15,12 @@ wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_
     if (0 == nch)
     {
         auto lastError = GetLastError();
-        if (lastError != ERROR_MUI_FILE_NOT_FOUND || !allowFallback)
+        if (!allowFallback)
         {
             CHECK_WIN32(lastError);
         }
 
-        // Fallback to english if the MUI file was not found for the requested languageS
+        // Fallback to english if unable to get the message in the requested language
         CHECK_COUNT(
             FormatMessageW(flags, nullptr, errorCode, LANGID_ENGLISH, (LPWSTR)&ptr_setter(pString), 0, nullptr));
     }
