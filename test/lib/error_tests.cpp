@@ -17,6 +17,12 @@ TEST(error_test, getErrorMessage_language_fallback)
                 StrEq(L"The system cannot find the file specified."));
 }
 
+TEST(error_test, getErrorMessage_language_fallback_disallowed)
+{
+    LANGID frenchStandard = 1036;
+    EXPECT_THROW(getErrorMessage(ERROR_FILE_NOT_FOUND, frenchStandard, false), win32_check_failed);
+}
+
 TEST(error_test, check_bool)
 {
     EXPECT_THROW(CHECK_BOOL(false), win32_check_failed);
