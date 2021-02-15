@@ -10,7 +10,19 @@ wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_
 {
     auto flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM;
     auto pString = unique_ptr<wchar_t, heap_ptr_deleter>{};
-    CHECK_COUNT(FormatMessageW(flags, nullptr, errorCode, languageId, (LPWSTR)&ptr_setter(pString), 0, nullptr));
+    auto nch = FormatMessageW(flags, nullptr, errorCode, languageId, (LPWSTR)&ptr_setter(pString), 0, nullptr);
+    if (0 == nch)
+    {
+        auto lastError = GetLastError();
+        if (lastError != ERROR_MUI_FILE_NOT_FOUND)
+        {
+            CHECK_WIN32(lastError);
+        }
+
+        // Fallback to english if the MUI file was not found for the requested languageS
+        CHECK_COUNT(
+            FormatMessageW(flags, nullptr, errorCode, LANGID_ENGLISH, (LPWSTR)&ptr_setter(pString), 0, nullptr));
+    }
     return trimRight(static_cast<const wchar_t*>(pString.get()), ::isspace);
 }
 

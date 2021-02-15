@@ -10,6 +10,13 @@ TEST(error_test, getErrorMessage_converts_win32_code_to_error_message)
     ASSERT_THAT(getErrorMessage(ERROR_FILE_NOT_FOUND), StrEq(L"The system cannot find the file specified."));
 }
 
+TEST(error_test, getErrorMessage_language_fallback)
+{
+    LANGID frenchStandard = 1036;
+    ASSERT_THAT(getErrorMessage(ERROR_FILE_NOT_FOUND, frenchStandard),
+                StrEq(L"The system cannot find the file specified."));
+}
+
 TEST(error_test, check_bool)
 {
     EXPECT_THROW(CHECK_BOOL(false), win32_check_failed);
