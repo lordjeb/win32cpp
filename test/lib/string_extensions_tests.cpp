@@ -14,10 +14,14 @@ TEST(string_extensions_test, appendPath_appends_n_paths)
     ASSERT_THAT(appendPath(L"C:", L"root_dir", L"subdir"), StrEq(LR"(C:\root_dir\subdir)"));
 }
 
-TEST(string_extensions_test, appendPath_trims_extra_slashes)
+TEST(string_extensions_test, appendPath_trims_extra_slashes_1)
 {
-    EXPECT_THAT(appendPath(L"C:\\", L"root_dir", L"subdir"), StrEq(LR"(C:\root_dir\subdir)"));
-    EXPECT_THAT(appendPath(L"C:\\", L"\\root_dir\\", L"\\subdir"), StrEq(LR"(C:\root_dir\subdir)"));
+    ASSERT_THAT(appendPath(L"C:\\", L"root_dir", L"subdir"), StrEq(LR"(C:\root_dir\subdir)"));
+}
+
+TEST(string_extensions_test, appendPath_trims_extra_slashes_2)
+{
+    ASSERT_THAT(appendPath(L"C:\\", L"\\root_dir\\", L"\\subdir"), StrEq(LR"(C:\root_dir\subdir)"));
 }
 
 TEST(string_extensions_test, appendPath_leaves_beginning_slashes)

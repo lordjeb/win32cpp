@@ -10,7 +10,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #pragma warning(pop)
-using namespace testing;
 
 // ASSERT_THAT/EXPECT_THAT macros trigger this warning, so we are disabling it here
 #pragma warning(disable : 6326)
@@ -23,4 +22,3 @@ using namespace testing;
 // win32cpp
 #include "debug.h"
 #include "error.h"
-using namespace win32cpp;

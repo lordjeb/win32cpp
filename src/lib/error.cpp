@@ -85,5 +85,7 @@ char const* win32cpp::check_failed::what() const
                          std::exception::what());
     }
 
+    // DEBUG: Remove this!!
+    outputDebugStringEx(L"%S\n", message.c_str());
     return message.c_str();
 }

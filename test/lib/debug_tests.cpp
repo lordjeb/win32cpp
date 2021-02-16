@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "debug.h"
 
+using namespace win32cpp;
+
 TEST(debug_test, assertions)
 {
     VERIFY(true);

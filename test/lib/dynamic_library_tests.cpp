@@ -2,6 +2,7 @@
 #include "dynamic_library.h"
 #include <Windows.h>
 
+using namespace win32cpp;
 using ::testing::Eq;
 
 TEST(dynamic_library_test, load_and_call_Sleep)
@@ -29,12 +30,14 @@ TEST(dynamic_library_test, load_and_call_RtlInitUnicodeString)
 
 TEST(dynamic_library_test, unloadable_library_throws)
 {
+    // Note: compiler issues prevent us from converting this to ASSERT_THAT(..., Throws)
     DynamicFunction<VOID, DWORD> Sleep("blah.dll", "Sleep");
     ASSERT_THROW(Sleep(10), check_failed);
 }
 
 TEST(dynamic_library_test, unloadable_function_throws)
 {
+    // Note: compiler issues prevent us from converting this to ASSERT_THAT(..., Throws)
     DynamicFunction<VOID, DWORD> Sleep("kernel32.dll", "Blah");
     ASSERT_THROW(Sleep(10), check_failed);
 }
