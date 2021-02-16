@@ -80,7 +80,8 @@ function Invoke-CMakeGenerator() {
             $debugPostfix = '-debug'
         }
 
-        $package_name = "win32cpp-$Platform-$Runtime$debugPostfix"
+        $vsver = $VisualStudioVersion.ToLower()
+        $package_name = "win32cpp-$vsver-$Platform-$Runtime$debugPostfix"
 
         $inc_out_dir = "$package_dir\\$package_name\\include\\win32cpp"
         New-Item -Type Directory -Path $inc_out_dir | Out-Null
@@ -90,7 +91,7 @@ function Invoke-CMakeGenerator() {
         New-Item -Type Directory -Path $lib_out_dir | Out-Null
         Copy-Item -Path "$Directory\\src\\lib\\$Config\\*" -Destination $lib_out_dir
 
-        $package_filename = "$package_dir\\win32cpp-$Platform-$Runtime$debugPostfix.zip"
+        $package_filename = "$package_dir\\$package_name.zip"
         Compress-Archive -Path "$package_dir\\$package_name\\*" -DestinationPath $package_filename
     }
 }
