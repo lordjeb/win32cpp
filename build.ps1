@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param(
     [ValidateSet('All', 'Vs2015', 'Vs2017', 'Vs2019')]
-    [String] $VisualStudioVersion = 'Vs2015',
+    [String] $VisualStudioVersion = 'Vs2019',
     [ValidateSet('All', 'Static', 'Dynamic')]
     [String] $Runtime = 'All',
     [ValidateSet('All', 'Debug', 'Release')]
@@ -67,24 +67,31 @@ function Invoke-CMakeGenerator() {
     Write-Output "$cmake --build $Directory --config $Config"
     if ($VerboseBuild) {
         & $cmake --build $Directory --config $Config --verbose
-    } else {
+    }
+    else {
         & $cmake --build $Directory --config $Config
     }
     if ($LastExitCode -ne 0) { exit -1 }
 
     # Copy output somewhere interesting for packaging
     if ($Package) {
-        $lib_dir = $package_dir + '\lib'
-        if ($Runtime -eq 'static') {
-            $lib_dir += '\crt'
+        $debugPostfix = ''
+        if ($Config -eq 'Debug') {
+            $debugPostfix = '-debug'
         }
-        else {
-            $lib_dir += '\crtdll'
-        }
-        $lib_dir += '\' + $Platform + '\' + $Config
 
-        New-Item -ItemType Directory -Path $lib_dir | Out-Null
-        Copy-Item -Path ($Directory + "\\src\\lib\\$Config\\*") -Destination $lib_dir
+        $package_name = "win32cpp-$Platform-$Runtime$debugPostfix"
+
+        $inc_out_dir = "$package_dir\\$package_name\\include\\win32cpp"
+        New-Item -Type Directory -Path $inc_out_dir | Out-Null
+        Copy-Item -Path 'src\lib\*.h' -Destination $inc_out_dir -Exclude 'pch.h'
+
+        $lib_out_dir = "$package_dir\\$package_name\\lib"
+        New-Item -Type Directory -Path $lib_out_dir | Out-Null
+        Copy-Item -Path "$Directory\\src\\lib\\$Config\\*" -Destination $lib_out_dir
+
+        $package_filename = "$package_dir\\win32cpp-$Platform-$Runtime$debugPostfix.zip"
+        Compress-Archive -Path "$package_dir\\$package_name\\*" -DestinationPath $package_filename
     }
 }
 
@@ -123,10 +130,7 @@ if ($Package) {
         Remove-Item -Recurse $package_dir | Out-Null
     }
 
-    # Copy headers to 'package\include\win32cpp'
-    $include_dir = $package_dir + '\include\win32cpp'
-    New-Item -ItemType Directory -Path $include_dir | Out-Null
-    Copy-Item -Path 'src\lib\*.h' -Destination $include_dir -Exclude 'pch.h'
+    New-Item -ItemType Directory -Path $package_dir | Out-Null
 }
 
 foreach ($v in $VisualStudioVersions) {
