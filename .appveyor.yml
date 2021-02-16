@@ -50,7 +50,17 @@ test_script:
 artifacts:
   - path: package\*.zip
 
-deploy: off
+deploy:
+  description: 'win32cpp release'
+  provider: GitHub
+  auth_token:
+    secure: SY73yzHjXgL08FDAp1AAYbb0D3sodejPM6YHTzRjdG9x9UnVmGrH16or1vZo6aWV
+  artifact: /.*\.zip/            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    APPVEYOR_REPO_TAG: true        # deploy on tag push only
 
 notifications:
   - provider: Email
