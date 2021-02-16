@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "module_info.h"
 
+using namespace win32cpp;
 using ::testing::EndsWith;
+using ::testing::Eq;
 using ::testing::Gt;
 
 TEST(module_info_test, getModuleFilename)
@@ -23,7 +25,7 @@ TEST(module_info_test, getTempFilename)
 {
     auto temp_file = getTempFilename(getTempPath(), L"pre");
     ASSERT_THAT(temp_file.size(), Gt(0UL));
-    ASSERT_TRUE(::DeleteFile(temp_file.c_str()));
+    ASSERT_THAT(::DeleteFile(temp_file.c_str()), Eq(TRUE));
 }
 
 TEST(module_info_test, getWindowsPath)
@@ -44,8 +46,8 @@ auto isThreadImpersonating() -> bool
 
 TEST(module_info_test, getThreadToken)
 {
-    ASSERT_FALSE(isThreadImpersonating());
+    ASSERT_THAT(isThreadImpersonating(), Eq(false));
     auto token = getThreadToken();
     ASSERT_THAT(token.get(), ::testing::NotNull());
-    ASSERT_TRUE(isThreadImpersonating());
+    ASSERT_THAT(isThreadImpersonating(), Eq(true));
 }

@@ -3,6 +3,10 @@
 #include <Windows.h>
 #include <sddl.h>
 
+using namespace win32cpp;
+using ::testing::NotNull;
+using ::testing::StartsWith;
+
 TEST(memory_test, heap_ptr)
 {
     auto hptr = std::unique_ptr<BYTE, heap_ptr_deleter>{ (BYTE*)::HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256) };

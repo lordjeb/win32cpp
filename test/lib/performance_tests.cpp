@@ -2,6 +2,9 @@
 #include "performance.h"
 #include <Windows.h>
 
+using namespace win32cpp;
+using ::testing::Ge;
+
 TEST(performance_test, measures_performance_with_lambda)
 {
     auto ms = measureElapsedTime([]() { ::Sleep(10); });
