@@ -106,6 +106,7 @@ package/
 
 # User build scripts
 build-user.cmd
+build-user.ps1
 
 # Developer environment specific files
 .vscode/c_cpp_properties.json
