@@ -1,4 +1,6 @@
 #pragma once
+#include <condition_variable>
+#include <mutex>
 #include <vector>
 #include <Windows.h>
 #include "debug.h"
@@ -170,7 +172,8 @@ namespace win32cpp
     private:
         static console_service_controller* m_instance;
         std::vector<std::unique_ptr<service_base>> m_services;
-        unique_handle m_serviceStopEvent;
+        std::mutex m_servicesStoppedMutex;
+        std::condition_variable m_servicesStopped;
 
         console_service_controller();
     };

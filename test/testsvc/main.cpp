@@ -112,6 +112,8 @@ int wmain(int argc, wchar_t* argv[])
             {
                 wcout << L"Running service from console. Press Ctrl+C to stop." << endl;
 
+                // Note: Singleton is not ideal here, but SetConsoleCtrlHandler doesn't really provide a way to have
+                // context, so we will live with this design
                 auto controller = console_service_controller::instance();
                 controller->add(make_unique<testsvc>());
                 controller->add(make_unique<testsvc2>());
@@ -153,18 +155,6 @@ int wmain(int argc, wchar_t* argv[])
 
         return 0;
     }
-    catch (const check_failed& e)
-    {
-        std::wstringstream ss;
-        ss << L"ERROR (" << e.file << ";" << e.line << "): " << getErrorMessage(e.error);
-
-        TRACE(L"%s\n", ss.str().c_str());
-
-        if (console_mode)
-        {
-            wcout << ss.str() << endl;
-        }
-    }
     catch (const exception& e)
     {
         auto what = str2wstr(e.what());
@@ -190,5 +180,5 @@ int wmain(int argc, wchar_t* argv[])
 
     TRACE(L"- testsvc::wmain\n");
 
-    return 1;
+    return 0;
 }

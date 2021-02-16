@@ -1,6 +1,7 @@
 #pragma once
 
 // Standard C++ Library
+#include <algorithm>
 #include <codecvt>
 #include <functional>
 #include <memory>

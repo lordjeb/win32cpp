@@ -5,11 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(Windows) Launch",
+            "name": "(Windows) Launch tests",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build_Vs2019_x64_dynamic/test/lib/Debug/lib_tests.exe",
             "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "(Windows) Launch service console",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_Vs2019_x64_dynamic/test/testsvc/Debug/testsvc.exe",
+            "args": [
+                "--console"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
