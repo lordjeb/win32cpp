@@ -35,25 +35,23 @@ void win32cpp::console_service_controller::add(std::unique_ptr<service_base> p)
 void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[])
 {
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
-    m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
-    CHECK_BOOL(bool(m_serviceStopEvent));
 
-    for (auto& service : m_services)
-    {
-        service->onInitialize(argc, argv);
-    }
+    std::for_each(begin(m_services), end(m_services),
+                  [argc, argv](const std::unique_ptr<service_base>& service) { service->onInitialize(argc, argv); });
 
-    WaitForSingleObject(m_serviceStopEvent.get(), INFINITE);
+    std::unique_lock<std::mutex> lock(m_servicesStoppedMutex);
+    m_servicesStopped.wait(lock);
 }
 
 void win32cpp::console_service_controller::stop()
 {
-    for (auto& service : m_services)
-    {
-        service->onStop();
-    }
+    // Stop the services in the reverse order in which they were started
+    std::for_each(rbegin(m_services), rend(m_services),
+                  [](const std::unique_ptr<service_base>& service) { service->onStop(); });
 
-    CHECK_BOOL(SetEvent(m_serviceStopEvent.get()));
+    // Signal thread running console_service_controller::run that all services have been stopped
+    std::unique_lock<std::mutex> lock(m_servicesStoppedMutex);
+    m_servicesStopped.notify_all();
 }
 
 void win32cpp::service_registration::startDispatcher()
