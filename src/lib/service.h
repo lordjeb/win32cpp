@@ -10,6 +10,7 @@ namespace win32cpp
     // Defines the interface that a service should implement
     struct service_base
     {
+        virtual ~service_base() = default;
         virtual DWORD controlsAccepted() const = 0;
         virtual std::wstring name() const = 0;
         virtual std::wstring displayName() const = 0;
@@ -162,13 +163,13 @@ namespace win32cpp
     public:
         static console_service_controller* instance();
         static BOOL CtrlHandler(DWORD controlType);
-        void add(std::shared_ptr<service_base> p);
+        void add(std::unique_ptr<service_base> p);
         void run(unsigned int argc, wchar_t* argv[]);
         void stop();
 
     private:
         static console_service_controller* m_instance;
-        std::vector<std::shared_ptr<service_base>> m;
+        std::vector<std::unique_ptr<service_base>> m_services;
         unique_handle m_serviceStopEvent;
 
         console_service_controller();

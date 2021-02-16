@@ -113,8 +113,8 @@ int wmain(int argc, wchar_t* argv[])
                 wcout << L"Running service from console. Press Ctrl+C to stop." << endl;
 
                 auto controller = console_service_controller::instance();
-                controller->add(make_shared<testsvc>());
-                controller->add(make_shared<testsvc2>());
+                controller->add(make_unique<testsvc>());
+                controller->add(make_unique<testsvc2>());
                 controller->run(argc, argv);
             }
             else if (!wcscmp(argv[1], L"--install"))
