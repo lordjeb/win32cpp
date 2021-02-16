@@ -7,7 +7,6 @@ platform:
   - x64
 
 configuration:
-  - Debug
   - Release
 
 image:
@@ -30,11 +29,11 @@ install:
 build_script:
   - ps: |
       if ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2015") {
-          .\build.ps1 -VisualStudioVersion Vs2015 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
+          .\build.ps1 -VisualStudioVersion Vs2015 -Runtime All -Platform $env:PLATFORM -Config $env:CONFIGURATION -Package
       } elseif ("$env:APPVEYOR_JOB_NAME" -match "Image: Visual Studio 2017") {
-          .\build.ps1 -VisualStudioVersion Vs2017 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
+          .\build.ps1 -VisualStudioVersion Vs2017 -Runtime All -Platform $env:PLATFORM -Config $env:CONFIGURATION -Package
       } else {
-          .\build.ps1 -VisualStudioVersion Vs2019 -Runtime Static -Platform $env:PLATFORM -Config $env:CONFIGURATION
+          .\build.ps1 -VisualStudioVersion Vs2019 -Runtime All -Platform $env:PLATFORM -Config $env:CONFIGURATION -Package
       }
 
 test_script:
@@ -47,6 +46,9 @@ test_script:
           $TestExecutable = 'build_Vs2019_' + $env:PLATFORM + '_static\test\lib\' + $env:CONFIGURATION + '\lib_tests.exe'
       }
       & $TestExecutable
+
+artifacts:
+  - path: package\*.zip
 
 deploy: off
 
