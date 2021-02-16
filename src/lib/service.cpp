@@ -27,9 +27,9 @@ BOOL win32cpp::console_service_controller::CtrlHandler(DWORD controlType)
     return FALSE;
 }
 
-void win32cpp::console_service_controller::add(std::shared_ptr<service_base> p)
+void win32cpp::console_service_controller::add(std::unique_ptr<service_base> p)
 {
-    m.push_back(p);
+    m_services.emplace_back(std::move(p));
 }
 
 void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[])
@@ -38,9 +38,9 @@ void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[
     m_serviceStopEvent = unique_handle{ CreateEvent(nullptr, TRUE, FALSE, nullptr) };
     CHECK_BOOL(bool(m_serviceStopEvent));
 
-    for (auto p : m)
+    for (auto& service : m_services)
     {
-        p->onInitialize(argc, argv);
+        service->onInitialize(argc, argv);
     }
 
     WaitForSingleObject(m_serviceStopEvent.get(), INFINITE);
@@ -48,9 +48,9 @@ void win32cpp::console_service_controller::run(unsigned int argc, wchar_t* argv[
 
 void win32cpp::console_service_controller::stop()
 {
-    for (auto p : m)
+    for (auto& service : m_services)
     {
-        p->onStop();
+        service->onStop();
     }
 
     CHECK_BOOL(SetEvent(m_serviceStopEvent.get()));
@@ -63,9 +63,9 @@ void win32cpp::service_registration::startDispatcher()
     std::vector<SERVICE_TABLE_ENTRY> service_table;
     for (size_t i = 0; i < m_serviceNames.size(); ++i)
     {
-        service_table.push_back(
+        service_table.emplace_back(
             SERVICE_TABLE_ENTRY{ const_cast<LPWSTR>(m_serviceNames[i].c_str()), m_serviceMains[i] });
     }
-    service_table.push_back(SERVICE_TABLE_ENTRY{ nullptr, nullptr });
+    service_table.emplace_back(SERVICE_TABLE_ENTRY{ nullptr, nullptr });
     CHECK_BOOL(StartServiceCtrlDispatcherW(&service_table[0]));
 }
