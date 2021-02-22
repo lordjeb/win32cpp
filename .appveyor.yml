@@ -8,6 +8,7 @@ platform:
 
 configuration:
   - Release
+  - Debug
 
 image:
   - Visual Studio 2015
