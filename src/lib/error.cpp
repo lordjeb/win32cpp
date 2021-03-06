@@ -14,7 +14,7 @@ wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_
     if (0 == nch)
     {
         auto lastError = GetLastError();
-        if (!allowFallback)
+        if (!allowFallback || LANGID_ENGLISH == languageId)
         {
             CHECK_WIN32(lastError);
         }
