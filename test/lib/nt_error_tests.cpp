@@ -9,6 +9,9 @@ using ::testing::Eq;
 using ::testing::StrEq;
 using ::testing::Throws;
 
+static_assert(std::is_base_of<std::exception, win32cpp::ntstatus_check_failed>::value,
+              "win32cpp::ntstatus_check_failed should be an std::exception-derived type");
+
 TEST(nt_error_test, check_ntstatus_positive)
 {
     ASSERT_THAT([]() { CHECK_NTSTATUS(-1); }, Throws<ntstatus_check_failed>());
