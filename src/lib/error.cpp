@@ -5,6 +5,11 @@
 
 using namespace std;
 
+wstring win32cpp::getErrorMessage(DWORD errorCode, bool allowFallback)
+{
+    return getErrorMessage(errorCode, ::GetUserDefaultUILanguage(), allowFallback);
+}
+
 wstring win32cpp::getErrorMessage(DWORD errorCode, LANGID languageId /*= LANGID_ENGLISH*/,
                                   bool allowFallback /*= true*/)
 {

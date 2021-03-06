@@ -202,5 +202,6 @@ namespace win32cpp
         }
     }
 
-    std::wstring getErrorMessage(DWORD dw, LANGID languageId = LANGID_ENGLISH, bool allowFallback = true);
+    std::wstring getErrorMessage(DWORD errorCode, bool allowFallback);
+    std::wstring getErrorMessage(DWORD errorCode, LANGID languageId = LANGID_ENGLISH, bool allowFallback = true);
 }

@@ -13,6 +13,12 @@ using ::testing::ThrowsMessage;
 static_assert(std::is_base_of<std::exception, win32cpp::check_failed>::value,
               "win32cpp::check_failed should be an std::exception-derived type");
 
+static_assert(std::is_base_of<std::exception, win32cpp::win32_check_failed>::value,
+              "win32cpp::win32_check_failed should be an std::exception-derived type");
+
+static_assert(std::is_base_of<std::exception, win32cpp::hresult_check_failed>::value,
+              "win32cpp::hresult_check_failed should be an std::exception-derived type");
+
 TEST(error_test, getErrorMessage_converts_win32_code_to_error_message)
 {
     ASSERT_THAT(getErrorMessage(ERROR_FILE_NOT_FOUND), StrEq(L"The system cannot find the file specified."));
@@ -27,8 +33,15 @@ TEST(error_test, getErrorMessage_language_fallback)
 TEST(error_test, getErrorMessage_throws_when_language_fallback_disallowed)
 {
     LANGID langId{ 1036 };
+    ASSERT_THAT(1033, Eq(GetUserDefaultLangID()));
     ASSERT_THAT([langId]() { getErrorMessage(ERROR_FILE_NOT_FOUND, langId, false); },
                 ThrowsMessage<win32_check_failed>(HasSubstr("[WCODE: 0x")));
+}
+
+TEST(error_test, getErrorMessage_with_default_language)
+{
+    ASSERT_THAT(1033, Eq(GetUserDefaultLangID()));
+    ASSERT_THAT(getErrorMessage(ERROR_FILE_NOT_FOUND), StrEq(L"The system cannot find the file specified."));
 }
 
 TEST(error_test, check_bool_negative)
