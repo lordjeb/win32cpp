@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "debug.h"
+#include <gtest/gtest.h>
 
 using namespace win32cpp;
 

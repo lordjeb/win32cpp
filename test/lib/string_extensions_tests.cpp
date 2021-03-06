@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "string_extensions.h"
+#include <gmock/gmock.h>
 
 using namespace win32cpp;
 using testing::StrEq;

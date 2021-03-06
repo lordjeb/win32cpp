@@ -1,8 +1,6 @@
-set (source_list
-	main.cpp
-)
+file(GLOB header_list *.h)
+file(GLOB source_list *.cpp)
 
-ADD_MSVC_PRECOMPILED_HEADER("pch.h" "pch.cpp" source_list)
 add_definitions("/analyze")
 add_executable(testsvc ${source_list})
 include_directories(${CMAKE_SOURCE_DIR}/src/lib)

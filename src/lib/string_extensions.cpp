@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "string_extensions.h"
+#include <locale>
+#include <Windows.h>
 
 using namespace std;
 using namespace win32cpp;

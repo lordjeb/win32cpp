@@ -1,8 +1,8 @@
-#include "pch.h"
 #include "lock_guard.h"
+#include <Windows.h>
+#include <gmock/gmock.h>
 #include "handle.h"
 #include "windows_constants.h"
-#include <Windows.h>
 
 using namespace win32cpp;
 using ::testing::Eq;

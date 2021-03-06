@@ -1,6 +1,6 @@
-#include "pch.h"
 #include "string_extensions.h"
-
+#include <Windows.h>
+#include <gmock/gmock.h>
 typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #include "nt_error.h"
 

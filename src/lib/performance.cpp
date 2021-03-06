@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "error.h"
 #include "performance.h"
 

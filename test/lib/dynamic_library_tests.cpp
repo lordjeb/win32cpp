@@ -1,6 +1,6 @@
-#include "pch.h"
 #include "dynamic_library.h"
 #include <Windows.h>
+#include <gmock/gmock.h>
 
 using namespace win32cpp;
 using ::testing::Eq;

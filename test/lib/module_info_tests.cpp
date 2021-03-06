@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "module_info.h"
+#include <gmock/gmock.h>
 
 using namespace win32cpp;
 using ::testing::EndsWith;
