@@ -10,7 +10,13 @@ add_executable(lib_tests
 include_directories(${CMAKE_SOURCE_DIR}/src/lib)
 include_directories(${gtest_SOURCE_DIR}/include ${gmock_SOURCE_DIR}/include ${COMMON_INCLUDES})
 target_link_libraries(lib_tests win32cpp gtest gmock gmock_main)
-target_compile_features(win32cpp PRIVATE cxx_std_11)
+if (MSVC_TOOLSET_VERSION GREATER_EQUAL 142)
+	target_compile_features(lib_tests PRIVATE cxx_std_20)
+elseif (MSVC_TOOLSET_VERSION GREATER_EQUAL 141)
+	target_compile_features(lib_tests PRIVATE cxx_std_17)
+else()
+	target_compile_features(lib_tests PRIVATE cxx_std_14)
+endif()
 set_target_properties(lib_tests PROPERTIES FOLDER test)
 
 # Disable C6326 which the gtest ASSERT_THAT/EXPECT_THAT macros trigger
