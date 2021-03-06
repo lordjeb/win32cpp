@@ -1,7 +1,8 @@
-#include "pch.h"
 #include "memory.h"
 #include <Windows.h>
 #include <sddl.h>
+#include <gmock/gmock.h>
+#include "error.h"
 
 using namespace win32cpp;
 using ::testing::NotNull;

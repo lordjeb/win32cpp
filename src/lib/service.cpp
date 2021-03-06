@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "service.h"
+#include <algorithm>
 
 win32cpp::console_service_controller* win32cpp::console_service_controller::m_instance = nullptr;
 

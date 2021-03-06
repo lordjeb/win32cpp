@@ -1,8 +1,8 @@
-#include "pch.h"
 #include "error.h"
+#include <Windows.h>
+#include <gmock/gmock.h>
 #include "privilege_guard.h"
 #include "module_info.h"
-#include <Windows.h>
 
 using namespace win32cpp;
 using ::testing::Eq;

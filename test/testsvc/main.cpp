@@ -1,7 +1,7 @@
-#include "pch.h"
 #include <strstream>
 #include <service.h>
 #include <string_extensions.h>
+#include "module_info.h"
 
 using namespace std;
 using namespace win32cpp;

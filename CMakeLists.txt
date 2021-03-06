@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.9)
-include("msvc.cmake")
+cmake_minimum_required(VERSION 3.18)
 
 project(win32cpp)
-configure_msvc_runtime()
 
 # Force the googletest to build the way we want it to (static or dynamic CRT)
 if(${MSVC_RUNTIME} STREQUAL "static")

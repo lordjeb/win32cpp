@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "handle.h"
+#include <gmock/gmock.h>
 #include "module_info.h"
 
 using namespace win32cpp;

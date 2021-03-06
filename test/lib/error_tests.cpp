@@ -1,5 +1,5 @@
-﻿#include "pch.h"
-#include "error.h"
+﻿#include "error.h"
+#include <gmock/gmock.h>
 #include "string_extensions.h"
 
 using namespace win32cpp;
