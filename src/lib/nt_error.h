@@ -10,44 +10,44 @@
 
 namespace win32cpp
 {
-	struct ntstatus_check_failed : public check_failed
-	{
-		explicit ntstatus_check_failed(NTSTATUS result, const wchar_t* message = L"") : check_failed(result, message)
-		{
-		}
+    struct ntstatus_check_failed : public check_failed
+    {
+        explicit ntstatus_check_failed(NTSTATUS result, const wchar_t* message = L"") : check_failed(result, message)
+        {
+        }
 
-		ntstatus_check_failed(NTSTATUS result, const wchar_t* file, int line, const wchar_t* message = L"") : check_failed(result, file, line, message)
-		{
-		}
+        ntstatus_check_failed(NTSTATUS result, const wchar_t* file, int line, const wchar_t* message = L"")
+            : check_failed(result, file, line, message)
+        {
+        }
 
-		virtual ~ntstatus_check_failed() {}
+        virtual ~ntstatus_check_failed()
+        {
+        }
 
-		NTSTATUS ntstatus() const
-		{
-			return error;
-		}
+        NTSTATUS ntstatus() const
+        {
+            return error;
+        }
 
-	protected:
-		virtual const char* errorCodeMessage() const override
-		{
-			return u8"NTSTATUS: ";
-		}
-	};
+    protected:
+        virtual const char* errorCodeMessage() const override;
+    };
 
-	inline void checkNtStatus(NTSTATUS ntstatus)
-	{
-		if (!NT_SUCCESS(ntstatus))
-		{
-			throw ntstatus_check_failed(ntstatus);
-		}
-	}
+    inline void checkNtStatus(NTSTATUS ntstatus)
+    {
+        if (!NT_SUCCESS(ntstatus))
+        {
+            throw ntstatus_check_failed(ntstatus);
+        }
+    }
 
-	inline void checkNtStatus(NTSTATUS ntstatus, const wchar_t* file, int line, const wchar_t* message = L"")
-	{
-		if (!NT_SUCCESS(ntstatus))
-		{
-			outputDebugStringEx(L"%s(%d): NTSTATUS result failure (0x%08x)\n", file, line, ntstatus);
-			throw ntstatus_check_failed(ntstatus, file, line, message);
-		}
-	}
+    inline void checkNtStatus(NTSTATUS ntstatus, const wchar_t* file, int line, const wchar_t* message = L"")
+    {
+        if (!NT_SUCCESS(ntstatus))
+        {
+            outputDebugStringEx(L"%s(%d): NTSTATUS result failure (0x%08x)\n", file, line, ntstatus);
+            throw ntstatus_check_failed(ntstatus, file, line, message);
+        }
+    }
 }
