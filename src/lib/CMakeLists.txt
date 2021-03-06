@@ -22,3 +22,4 @@ target_precompile_headers(
         <vector> 
         <Windows.h>
     )
+target_compile_features(win32cpp PRIVATE cxx_std_11)
