@@ -68,7 +68,7 @@ TEST_F(basic_unique_handle_test, registry_handle)
 
 TEST_F(basic_unique_handle_test, find_handle)
 {
-    auto fd = WIN32_FIND_DATA{ 0 };
+    WIN32_FIND_DATA fd{ 0 };
     auto h = unique_find_handle{ ::FindFirstFile(LR"(C:\*)", &fd) };
     ASSERT_THAT((bool)h, Eq(true));
     ASSERT_THAT(wcslen(fd.cFileName), Gt(0UL));
