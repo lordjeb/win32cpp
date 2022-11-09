@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param(
-    [ValidateSet('All', 'Vs2015', 'Vs2017', 'Vs2019')]
-    [String] $VisualStudioVersion = 'Vs2019',
+    [ValidateSet('All', 'Vs2019', 'Vs2022')]
+    [String] $VisualStudioVersion = 'Vs2022',
     [ValidateSet('All', 'Static', 'Dynamic')]
     [String] $Runtime = 'All',
     [ValidateSet('All', 'Debug', 'Release')]
@@ -18,7 +18,7 @@ $package_dir = 'package'
 function Invoke-CMakeGenerator() {
     [CmdletBinding()]
     Param(
-        [ValidateSet('Vs2015', 'Vs2017', 'Vs2019')]
+        [ValidateSet('Vs2019', 'Vs2022')]
         [String] $VisualStudioVersion,
         [ValidateSet('Static', 'Dynamic')]
         [String] $Runtime,
@@ -31,18 +31,11 @@ function Invoke-CMakeGenerator() {
 
     $Runtime = $Runtime.ToLower()
     $Directory = 'build_' + $VisualStudioVersion + '_' + $Platform + '_' + $Runtime
-    if ($VisualStudioVersion -eq 'Vs2015') {
-        $Generator = 'Visual Studio 14 2015'
-    }
-    elseif ($VisualStudioVersion -eq 'Vs2017') {
-        $Generator = 'Visual Studio 15 2017'
-    }
-    elseif ($VisualStudioVersion -eq 'Vs2019') {
+    if ($VisualStudioVersion -eq 'Vs2019') {
         $Generator = 'Visual Studio 16 2019'
     }
-
-    if ($Platform -eq 'x64' -and $VisualStudioVersion -in ('Vs2015', 'Vs2017')) {
-        $Generator = $Generator + ' Win64'
+    elseif ($VisualStudioVersion -eq 'Vs2022') {
+        $Generator = 'Visual Studio 17 2022'
     }
 
     # Configure build projects using CMake
@@ -52,14 +45,8 @@ function Invoke-CMakeGenerator() {
 
     Push-Location $Directory
 
-    if ($VisualStudioVersion -in ('Vs2015', 'Vs2017')) {
-        Write-Output "$cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" .."
-        & $cmake -G $Generator "-DMSVC_RUNTIME=$Runtime" ..
-    }
-    else {
-        Write-Output "$cmake -G $Generator -A $Platform "-DMSVC_RUNTIME=$Runtime" .."
-        & $cmake -G $Generator -A $Platform "-DMSVC_RUNTIME=$Runtime" .. 
-    }
+    Write-Output "$cmake -G $Generator -A $Platform "-DMSVC_RUNTIME=$Runtime" .."
+    & $cmake -G $Generator -A $Platform "-DMSVC_RUNTIME=$Runtime" .. 
 
     Pop-Location
     if ($LastExitCode -ne 0) { exit -1 }
@@ -97,7 +84,7 @@ function Invoke-CMakeGenerator() {
 }
 
 if ($VisualStudioVersion -eq 'All') {
-    $VisualStudioVersions = 'Vs2015', 'Vs2017', 'Vs2019'
+    $VisualStudioVersions = 'Vs2019', 'Vs2022'
 }
 else {
     $VisualStudioVersions = @($VisualStudioVersion)
