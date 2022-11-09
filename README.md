@@ -1,6 +1,6 @@
 # win32cpp
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/lordjeb/win32cpp?svg=true)](https://ci.appveyor.com/project/lordjeb/win32cpp)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/lordjeb/win32cpp-jv12e?svg=true)](https://ci.appveyor.com/project/lordjeb/win32cpp-jv12e)
 
 Writing Win32 code in straight-C can be error-prone; Sometimes even the best programmers forget to call CloseHandle in an error condition. C++ has introduced a lot of default functionality that really can assist in always writing correct code by default.
 
@@ -35,4 +35,4 @@ For more detailed examples and documentation, please see the [Docs](docs/OVERVIE
 
 win32cpp is built with CMake. A Powershell script is included at the root of the repository that will assist in building various configurations. Prior to running the following command, make sure that cmake.exe is in the PATH.
 
-`build.ps1 -VisualStudioVersion [All|Vs2015|Vs2017|Vs2019] -Runtime [All|Static|Dynamic] -Config [All|Debug|Release] -Platform [All|Win32|x64] -Package -VerboseBuild`
+`build.ps1 -VisualStudioVersion [All|Vs2015|Vs2017|Vs2019|Vs2022] -Runtime [All|Static|Dynamic] -Config [All|Debug|Release] -Platform [All|Win32|x64] -Package -VerboseBuild`
