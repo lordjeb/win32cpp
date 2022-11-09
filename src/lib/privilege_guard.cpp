@@ -12,7 +12,7 @@ namespace win32cpp
         m_enabled = enablePrivilege(m_tokenHandle, m_privilege, true);
     }
 
-    privilege_guard::privilege_guard(privilege_guard&& src)
+    privilege_guard::privilege_guard(privilege_guard&& src) noexcept
         : m_tokenHandle{ src.m_tokenHandle }, m_privilege{ src.m_privilege }, m_enabled{ src.m_enabled }
     {
         src.m_tokenHandle = nullptr;
@@ -27,7 +27,7 @@ namespace win32cpp
         }
     }
 
-    auto privilege_guard::operator=(privilege_guard&& src) -> privilege_guard&
+    auto privilege_guard::operator=(privilege_guard&& src) noexcept -> privilege_guard&
     {
         if (this != &src)
         {

@@ -18,7 +18,7 @@ auto win32cpp::tracer::operator()(wchar_t const* pFormat, ...) const -> void
     auto cch = cch1 + cch2 + 1;
     auto pString = std::make_unique<wchar_t[]>(cch);
     CHECK_NE(-1, swprintf_s(pString.get(), cch, format_string, m_filename, m_line));
-    CHECK_NE(-1, _vsnwprintf_s(pString.get() + cch1, cch - cch1, _TRUNCATE, pFormat, args));
+    CHECK_NE(-1, _vsnwprintf_s(pString.get() + cch1, static_cast<size_t>(cch) - cch1, _TRUNCATE, pFormat, args));
     OutputDebugStringW(pString.get());
     va_end(args);
 }
