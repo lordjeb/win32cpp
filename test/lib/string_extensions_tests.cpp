@@ -34,6 +34,11 @@ TEST(string_extensions_test, appendPath_trims_ending_slashes)
     ASSERT_THAT(appendPath(L"C:", L"root_dir\\"), StrEq(LR"(C:\root_dir)"));
 }
 
+TEST(string_extensions_test, appendPath_removes_empty_paths)
+{
+    ASSERT_THAT(appendPath(L"C:", L"", L"root_dir\\"), StrEq(LR"(C:\root_dir)"));
+}
+
 TEST(string_extensions_test, trim_handles_empty_string)
 {
     ASSERT_THAT(trim(L"", isspace), StrEq(L""));

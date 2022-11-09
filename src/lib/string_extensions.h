@@ -46,9 +46,11 @@ namespace win32cpp
     std::wstring appendPath(Args const&... args)
     {
         std::wstring result;
-        int unpack[]{ 0, (result +=
-                          result.empty() ? trimRight(to_wstring(args), ispath) : L'\\' + trim(to_wstring(args), ispath),
-                          0)... };
+        int unpack[]{ 0,
+                      (result += to_wstring(args).empty() ? L""
+                                                          : (result.empty() ? trimRight(to_wstring(args), ispath)
+                                                                            : L'\\' + trim(to_wstring(args), ispath)),
+                       0)... };
         return trimRight(result, ispath);
     }
 
