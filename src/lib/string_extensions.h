@@ -71,7 +71,7 @@ namespace win32cpp
     template <typename... Args>
     auto format(const std::string& format, Args... args) -> std::string
     {
-        size_t size = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
+        size_t size = static_cast<size_t>(std::snprintf(nullptr, 0, format.c_str(), args...)) + 1;   // Extra space for '\0'
         std::unique_ptr<char[]> buf(new char[size]);
         if (std::snprintf(buf.get(), size, format.c_str(), args...) < 0)
         {
@@ -83,12 +83,7 @@ namespace win32cpp
     template <typename... Args>
     auto format(const std::wstring& format, Args... args) -> std::wstring
     {
-#if (_MSC_VER < 1910)
-// warning C6387: '_Param_(1)' could be '0':  this does not adhere to the specification for the function 'swprintf'
-// It is acceptable for the buffer count to be 0 because the buffer is null
-#pragma warning(suppress : 6387)
-#endif
-        size_t size = std::swprintf(nullptr, 0, format.c_str(), args...) + 1;   // Extra space for '\0'
+        size_t size = static_cast<size_t>(std::swprintf(nullptr, 0, format.c_str(), args...)) + 1;   // Extra space for '\0'
         std::unique_ptr<wchar_t[]> buf(new wchar_t[size]);
         if (std::swprintf(buf.get(), size, format.c_str(), args...) < 0)
         {

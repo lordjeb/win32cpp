@@ -16,8 +16,8 @@ namespace win32cpp
         privilege_guard& operator=(const privilege_guard&) = delete;
 
         // Move
-        privilege_guard(privilege_guard&& src);
-        auto operator=(privilege_guard&& src) -> privilege_guard&;
+        privilege_guard(privilege_guard&& src) noexcept;
+        auto operator=(privilege_guard&& src) noexcept -> privilege_guard&;
 
         auto enabled() const -> bool;
 
