@@ -54,7 +54,7 @@ deploy:
   description: 'win32cpp release'
   provider: GitHub
   auth_token:
-    secure: SY73yzHjXgL08FDAp1AAYbb0D3sodejPM6YHTzRjdG9x9UnVmGrH16or1vZo6aWV
+    secure: W3zRbfLgxfhwtRrkDovlbGExTZfUPel+INLDsV9cn8XV6tOs3A/hm5F5dswHYmcH
   artifact: /.*\.zip/            # upload all NuGet packages to release assets
   draft: false
   prerelease: false
