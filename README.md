@@ -1,6 +1,6 @@
 # win32cpp
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/lordjeb/win32cpp-jv12e?svg=true)](https://ci.appveyor.com/project/lordjeb/win32cpp-jv12e)
+[![Build status](https://ci.appveyor.com/api/projects/status/j8e9216t0clj93bx/branch/master?svg=true)](https://ci.appveyor.com/project/lordjeb/win32cpp/branch/master)
 
 Writing Win32 code in straight-C can be error-prone; Sometimes even the best programmers forget to call CloseHandle in an error condition. C++ has introduced a lot of default functionality that really can assist in always writing correct code by default.
 
